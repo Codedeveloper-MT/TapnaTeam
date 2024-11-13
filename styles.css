@@ -1,0 +1,109 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+body {
+  margin: 0;
+  background-color: grey;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  /* min-height: 100vh; */
+}
+
+.container {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+h1 {
+  color: grey;
+  margin-bottom: 30px;
+}
+
+label {
+  display: block;
+  text-align: left;
+  color: black;
+  margin: 1rem 0 0.5rem;
+  font-size: 0.9rem;
+}
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+.signin-button {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: grey;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.signin-button:hover {
+  background-color: #a0f0a0;
+}
+
+p {
+  font-size: 0.9rem;
+  color: #333;
+  margin: 1rem 0;
+}
+
+p a {
+  color: #00a300;
+  text-decoration: none;
+}
+
+.line-divider {
+  display: flex;
+  align-items: center;
+  margin: 1rem 0;
+}
+.line-divider span {
+  font-size: 0.8rem;
+  color: #333;
+  padding: 0 1rem;
+}
+.line-divider::before,
+.line-divider::after {
+  content: "";
+  flex: 1;
+  height: 1;
+  background-color: #ddd;
+}
+.google-signin-button {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.google-signin-button i {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
