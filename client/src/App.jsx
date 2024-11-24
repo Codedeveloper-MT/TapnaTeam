@@ -4,6 +4,7 @@ import Login from "./Login";
 import Signup from "./Signup";
 import ResetPasswordForm from "./ResetPasswordForm";
 import Dashboard from "./Dashboard";
+import UserProfile from "./UserProfile";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/reset-password" element={<ResetPasswordForm />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/profile" element={<UserProfile />} />
       </Routes>
     </Router>
   );
