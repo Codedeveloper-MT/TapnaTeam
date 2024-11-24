@@ -1,4 +1,3 @@
-/** @jsxImportSource @emotion/react */
 import { css } from "@emotion/react";
 import { Link } from "react-router-dom";
 
@@ -6,7 +5,7 @@ const container = css`
   display: flex;
   height: 100vh;
   background-color: white;
-  font-family: Arial, sans-serif; 
+  font-family: Arial, sans-serif;
   flex-wrap: wrap; /* Allow items to wrap for small screens */
 `;
 
@@ -41,7 +40,6 @@ const main = css`
     padding: 1.5rem;
   }
 `;
-
 
 const logo = css`
   margin-bottom: 3rem;
@@ -93,7 +91,7 @@ const input = css`
 `;
 
 const formContainer = css`
-  background-color: white; 
+  background-color: white;
   padding: 2rem;
   border-radius: 10px;
   width: 400px; /* Fixed width for form container */
@@ -126,7 +124,7 @@ function Login() {
       <div css={sidebar}>
         <h1>TapnaTeam</h1>
         <Link to="/reset-password">
-        <button css={button}>Forget Password</button>
+          <button css={button}>Forget Password</button>
         </Link>
         <Link to="/signup">
           <button css={button}>Sign Up</button>
@@ -140,7 +138,7 @@ function Login() {
         <div css={logo}>
           <img src="logo.jpeg" alt="TapnaTeam Logo" />
         </div>
-        
+
         {/* Form Container with a black background */}
         <div css={formContainer}>
           <form css={form}>
@@ -150,11 +148,15 @@ function Login() {
             </label>
             <label>
               Password:
-              <input css={input} type="password" placeholder="Enter your password" />
+              <input
+                css={input}
+                type="password"
+                placeholder="Enter your password"
+              />
             </label>
             <Link to="/dashboard">
-            <button css={button}>Forget Password</button>
-            </Link>  
+              <button css={button}>Forget Password</button>
+            </Link>
           </form>
         </div>
       </div>
