@@ -1,53 +1,88 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { css } from "@emotion/react";
-
 
 const containerStyle = css`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: linear-gradient(135deg, #6c63ff, #00c6ff);
+  max-width: 100%;
+  background-color: #000; /* Black background */
 `;
 
 const cardStyle = css`
   background-color: #ffffff;
-  padding: 2rem;
-  border-radius: 15px;
+  padding: 2rem 2.5rem;
+  border-radius: 8px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
   width: 100%;
   max-width: 400px;
-  color: #333;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const logoStyle = css`
+  text-align: center;
+  margin-bottom: 2rem;
+`;
+
+const logoImageStyle = css`
+  width: 80px;
+  height: auto;
 `;
 
 const headingStyle = css`
-  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
   margin-bottom: 1.5rem;
-  color: #6c63ff;
+  text-align: center;
+  color: #000;
 `;
 
 const formStyle = css`
   display: flex;
   flex-direction: column;
+  flex-grow: 1; /* Ensure the form takes available space */
+`;
+
+const inputGroupStyle = css`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+`;
+
+const labelStyle = css`
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 1rem;
+  color: #333;
+  flex: 1; /* Allow labels to take up equal space */
 `;
 
 const inputStyle = css`
-  margin-bottom: 1rem;
   padding: 0.75rem;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
+  flex: 2; /* Allow inputs to take up more space */
   &:focus {
     outline: none;
-    border-color: #6c63ff;
+    border-color: #6c63ff; /* Accent color */
     box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.3);
   }
 `;
 
+const buttonContainerStyle = css`
+  display: flex;
+  justify-content: flex-start; /* Aligns the button to the bottom-left */
+  margin-top: auto; /* Pushes the button to the bottom */
+`;
+
 const buttonStyle = css`
-  background-color: #6c63ff;
+  background-color: #333;
   color: #fff;
   border: none;
   padding: 0.75rem;
@@ -56,19 +91,15 @@ const buttonStyle = css`
   cursor: pointer;
   transition: background-color 0.3s;
   &:hover {
-    background-color: #574bcf;
+    background-color: #555;
   }
 `;
 
-const linkStyle = css`
-  text-align: center;
-  margin-top: 1rem;
+const errorStyle = css`
+  color: red;
   font-size: 0.9rem;
-  color: #6c63ff;
-  text-decoration: none;
-  &:hover {
-    text-decoration: underline;
-  }
+  margin-bottom: 1rem;
+  text-align: center;
 `;
 
 function Signup() {
@@ -76,7 +107,10 @@ function Signup() {
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
+
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -85,51 +119,96 @@ function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Replace with actual sign-up logic (e.g., API calls)
-    console.log("Form Data:", formData);
-    alert("Sign-Up Successful! (Placeholder)");
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match!");
+    } else {
+      setError(""); // Clear any existing error
+      console.log("Form Data:", formData);
+      alert("Sign-Up Successful!");
+      // Add actual signup logic here (e.g., API call)
+    }
   };
 
   return (
     <div css={containerStyle}>
       <div css={cardStyle}>
-        <h2 css={headingStyle}>Create an Account</h2>
+        <h2 css={headingStyle}>Welcome to TapnaTeam</h2>
         <form onSubmit={handleSubmit} css={formStyle}>
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter your name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            css={inputStyle}
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter your email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-            css={inputStyle}
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Create a password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-            css={inputStyle}
-          />
-          <button type="submit" css={buttonStyle}>
-            Sign Up
-          </button>
+          {error && <p css={errorStyle}>{error}</p>}
+          <div css={inputGroupStyle}>
+            <label htmlFor="name" css={labelStyle}>
+              Username:
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter your username"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              css={inputStyle}
+            />
+          </div>
+          <div css={inputGroupStyle}>
+            <label htmlFor="email" css={labelStyle}>
+              Email:
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="Enter your email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              css={inputStyle}
+            />
+          </div>
+          <div css={inputGroupStyle}>
+            <label htmlFor="password" css={labelStyle}>
+              Password:
+            </label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+              css={inputStyle}
+            />
+          </div>
+          <div css={inputGroupStyle}>
+            <label htmlFor="confirmPassword" css={labelStyle}>
+              Confirm Password:
+            </label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              required
+              css={inputStyle}
+            />
+          </div>
+          <div css={buttonContainerStyle}>
+            <button type="submit" css={buttonStyle}>
+              Sign Up
+            </button>
+          </div>
         </form>
-        <a href="#" css={linkStyle}>
-          Already have an account? Log in
-        </a>
       </div>
+      <div css={logoStyle}>
+          <img
+            src="/images/logo.jpeg" // Adjusted path to match folder
+            alt="TapnaTeam Logo"
+            css={logoImageStyle}
+          />
+        </div>
     </div>
   );
 }

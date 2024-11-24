@@ -136,7 +136,7 @@ function Login() {
       {/* Main Section */}
       <div css={main}>
         <div css={logo}>
-          <img src="/path/to/logo.png" alt="TapnaTeam Logo" />
+          <img src="logo.jpeg" alt="TapnaTeam Logo" />
         </div>
         
         {/* Form Container with a black background */}
