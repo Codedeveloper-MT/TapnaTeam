@@ -125,7 +125,9 @@ function Login() {
       {/* Sidebar */}
       <div css={sidebar}>
         <h1>TapnaTeam</h1>
+        <Link to="/reset-password">
         <button css={button}>Forget Password</button>
+        </Link>
         <Link to="/signup">
           <button css={button}>Sign Up</button>
         </Link>
@@ -150,7 +152,9 @@ function Login() {
               Password:
               <input css={input} type="password" placeholder="Enter your password" />
             </label>
-            <button css={button}>Log In</button>
+            <Link to="/dashboard">
+            <button css={button}>Forget Password</button>
+            </Link>  
           </form>
         </div>
       </div>

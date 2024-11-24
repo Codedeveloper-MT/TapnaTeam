@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import React, { useState } from "react";
 import { css } from "@emotion/react";
+import { Link } from "react-router-dom"; // Make sure to import Link
 
 const containerStyle = css`
   display: flex;
@@ -200,15 +201,23 @@ function Signup() {
               Sign Up
             </button>
           </div>
+          <div><p>Already have an account?</p></div>
+          <div css={buttonContainerStyle}>
+            <button css={buttonStyle}>
+            <Link to="/" css={{ marginLeft: "8px", color: "#6c63ff" }}>
+              Log In
+            </Link>
+            </button>
+          </div>
         </form>
       </div>
       <div css={logoStyle}>
-          <img
-            src="/images/logo.jpeg" // Adjusted path to match folder
-            alt="TapnaTeam Logo"
-            css={logoImageStyle}
-          />
-        </div>
+        <img
+          src="/images/logo.jpeg"
+          alt="TapnaTeam Logo"
+          css={logoImageStyle}
+        />
+      </div>
     </div>
   );
 }
