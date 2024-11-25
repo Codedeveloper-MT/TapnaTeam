@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const bcrypt = require("bcryptjs");//This is for the password hashing
+const bcrypt = require("bcryptjs"); // This is for the password hashing
 
 const app = express();
 app.use(express.json());
@@ -11,7 +11,6 @@ mongoose.connect("mongodb://localhost:27017/users", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
-
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -50,22 +49,20 @@ app.post("/signup", async (req, res) => {
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  
   const user = await User.findOne({ email });
   if (!user) {
     return res.status(400).json({ message: "User not found" });
   }
-
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
     return res.status(400).json({ message: "Incorrect password" });
   }
 
-  
   res.status(200).json({ message: "Login successful" });
 });
 
-app.listen(3001, () => {
-  console.log("Server is running on http://localhost:3001");
+
+app.listen(3002, () => {
+  console.log("Server is running on http://localhost:3002");
 });
