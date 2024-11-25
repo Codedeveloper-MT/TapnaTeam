@@ -1,3 +1,5 @@
+//Please be carefull when you're adding Code😭😢
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,10 +9,11 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-mongoose.connect("mongodb://localhost:27017/users", {
+mongoose.connect("mongodb://localhost:27017/users"); 
+    /*{
   useNewUrlParser: true,
   useUnifiedTopology: true,
-});
+});*/
 
 const userSchema = new mongoose.Schema({
   name: String,
@@ -63,6 +66,6 @@ app.post("/login", async (req, res) => {
 });
 
 
-app.listen(5000, () => {
+app.listen(5002, () => {
   console.log("Server is running on http://localhost:");
 });
