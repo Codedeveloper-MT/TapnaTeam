@@ -1,7 +1,6 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState } from "react";
 import { css } from "@emotion/react";
-import { Link } from "react-router-dom"; // Make sure to import Link
+import { Link } from "react-router-dom";
 
 const containerStyle = css`
   display: flex;
@@ -112,21 +111,51 @@ function Signup() {
   });
 
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
     } else {
-      setError(""); // Clear any existing error
-      console.log("Form Data:", formData);
-      alert("Sign-Up Successful!");
-      // Add actual signup logic here (e.g., API call)
+      setError("");
+
+      try {
+        // This part sends data to backend API for sign-up
+        const response = await fetch("http://localhost:3001/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+          }),
+        });
+
+        const result = await response.json();
+
+        if (response.ok) {
+          setSuccessMessage("Sign-up successful! Please log in.");
+          setFormData({
+            name: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          });
+        } else {
+          setError(result.message);
+        }
+      } catch (error) {
+        setError("Error signing up. Please try again.");
+      }
     }
   };
 
@@ -136,6 +165,7 @@ function Signup() {
         <h2 css={headingStyle}>Welcome to TapnaTeam</h2>
         <form onSubmit={handleSubmit} css={formStyle}>
           {error && <p css={errorStyle}>{error}</p>}
+          {successMessage && <p css={successStyle}>{successMessage}</p>}
           <div css={inputGroupStyle}>
             <label htmlFor="name" css={labelStyle}>
               Username:
@@ -201,12 +231,14 @@ function Signup() {
               Sign Up
             </button>
           </div>
-          <div><p>Already have an account?</p></div>
+          <div>
+            <p>Already have an account?</p>
+          </div>
           <div css={buttonContainerStyle}>
             <button css={buttonStyle}>
-            <Link to="/" css={{ marginLeft: "8px", color: "#6c63ff" }}>
-              Log In
-            </Link>
+              <Link to="/" css={{ marginLeft: "8px", color: "#6c63ff" }}>
+                Log In
+              </Link>
             </button>
           </div>
         </form>

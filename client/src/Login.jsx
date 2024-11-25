@@ -1,17 +1,36 @@
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    //Authorization
-    console.log("Email:", email);
-    console.log("Password:", password);
+
+    try {
+      const response = await fetch("http://localhost:3001/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        navigate("/dashboard");
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError("Error logging in. Please try again.");
+    }
   };
 
   return (
@@ -22,6 +41,7 @@ function Login() {
           <Heading>Login</Heading>
 
           <Form onSubmit={handleSubmit}>
+            {error && <ErrorMessage>{error}</ErrorMessage>}{" "}
             <Label>
               E-mail Address:
               <Input
@@ -82,6 +102,13 @@ function Login() {
   );
 }
 
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 0.9rem;
+  margin-bottom: 10px;
+  text-align: center;
+`;
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -93,25 +120,24 @@ const fadeIn = keyframes`
   }
 `;
 
-// Styled Components
 const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background: #f5f7fa; /* Light grayish background */
-  padding: 0 10px;
+  min-height: 100vh;
+  padding: 20px;
+  background: #f5f7fa;
   font-family: "Arial", sans-serif;
   animation: ${fadeIn} 1s ease-out;
 `;
 
 const FormWrapper = styled.div`
   background-color: #ffffff;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 400px;
+  max-width: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,19 +145,19 @@ const FormWrapper = styled.div`
 `;
 
 const WelcomeText = styled.h1`
-  font-size: 3rem;
-  font-weight: bold;
-  color: #2c3e50;
-  text-align: center;
-  margin-bottom: 30px;
-`;
-
-const Heading = styled.h2`
-  font-size: 2rem;
+  font-size: 1.8rem;
   font-weight: bold;
   color: #2c3e50;
   text-align: center;
   margin-bottom: 20px;
+`;
+
+const Heading = styled.h2`
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 15px;
 `;
 
 const Form = styled.form`
@@ -141,50 +167,49 @@ const Form = styled.form`
 `;
 
 const Label = styled.label`
-  font-size: 1rem;
-  margin-bottom: 10px;
+  font-size: 0.9rem;
+  margin-bottom: 8px;
   color: #2c3e50;
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  margin-bottom: 20px;
+  padding: 8px;
+  margin-bottom: 15px;
   border: 1px solid #ccc;
   border-radius: 6px;
   width: 100%;
-  font-size: 1rem;
-  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 0.9rem;
+  box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.1);
 
   &:focus {
     outline: none;
     border: 1px solid #3498db;
-    box-shadow: 0px 0px 4px rgba(52, 152, 219, 0.5);
+    box-shadow: 0px 0px 3px rgba(52, 152, 219, 0.5);
   }
 `;
 
 const Button = styled.button`
-  padding: 10px 18px;
-
+  padding: 8px 16px;
   margin: 10px 0;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  background-color: grey;
+  background-color: #3498db;
   color: white;
-  font-size: 1rem;
+  font-size: 0.9rem;
   transition: transform 0.2s ease, background-color 0.3s ease;
-  width: 90%;
+  width: 100%;
   text-align: center;
 
   &:hover {
     background-color: #2980b9;
-    transform: translateY(-5px);
+    transform: translateY(-3px);
   }
 `;
 
 const SignUpLink = styled.p`
-  font-size: 1rem;
-  margin: 10px 0;
+  font-size: 0.9rem;
+  margin: 8px 0;
   text-align: center;
   color: #2980b9;
 `;
@@ -192,17 +217,17 @@ const SignUpLink = styled.p`
 const Separator = styled.hr`
   width: 100%;
   border: 1px solid #ecf0f1;
-  margin: 20px 0;
+  margin: 15px 0;
 `;
 
 const GoogleButton = styled.button`
-  padding: 10px 15px;
-  margin: 10px 0;
+  padding: 8px 12px;
+  margin: 8px 0;
   border: 1px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
   background-color: transparent;
   color: #2c3e50;
-  font-size: 1rem;
+  font-size: 0.9rem;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -213,11 +238,11 @@ const GoogleButton = styled.button`
 
   &:hover {
     background-color: #ecf0f1;
-    transform: translateY(-5px);
+    transform: translateY(-3px);
   }
 
   & svg {
-    margin-right: 8px;
+    margin-right: 6px;
   }
 `;
 

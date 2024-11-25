@@ -1,6 +1,7 @@
-/** @jsxImportSource @emotion/react */
-import { Link } from "react-router-dom";
+import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
+import React from "react";
+import { Link } from "react-router-dom";
 
 // Styled Components for Reset Password Form
 const Container = styled.div`
@@ -10,61 +11,93 @@ const Container = styled.div`
   justify-content: center;
   min-height: 100vh; /* Ensures container takes full height of viewport */
   width: 100%;
-  background-color: #f0f0f0;
+  padding: 20px;
+  background-color: #f8f9fa; /* Light background for a clean look */
 `;
 
 const Logo = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 100px;
-  height: 100px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
-  background-color: #333;
+  background-color: #6c63ff; /* Accent color */
   color: #fff;
-  font-size: 24px;
+  font-size: 1.5rem;
+  font-weight: bold;
   margin-bottom: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+`;
+
+const Heading = styled.h1`
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
 `;
 
 const InputField = styled.input`
-  padding: 10px;
+  padding: 12px;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 300px;
-  margin-bottom: 10px;
+  border-radius: 6px;
+  width: 100%;
+  max-width: 350px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+
+  &:focus {
+    outline: none;
+    border-color: #6c63ff; /* Accent color for focus */
+    box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
+  }
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  background-color: #333;
+  padding: 12px 20px;
+  background-color: #6c63ff; /* Accent color */
   color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background-color: #584dcb; /* Darker shade on hover */
+    transform: translateY(-2px);
+  }
 `;
 
 const LinkContainer = styled.div`
-  margin-top: 15px;
+  margin-top: 20px;
   font-size: 0.9rem;
   color: #333;
+  text-align: center;
+
+  & a {
+    color: #6c63ff;
+    text-decoration: none;
+    font-weight: bold;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
 `;
 
 const ResetPasswordForm = () => {
   return (
     <Container>
-      <Logo>
-        OT
-        <br />
-        Tapna Team
-      </Logo>
-      <InputField type="email" placeholder="E-mail Address" />
+      <Logo>OT</Logo>
+      <Heading>Reset Password</Heading>
+      <InputField type="email" placeholder="Enter your email address" />
       <Button>Reset Password</Button>
       <LinkContainer>
         <p>Already have an account?</p>
-        {/* Link to Login Page */}
-        <Link to="/" style={{ color: "#6c63ff", textDecoration: "none" }}>
-          Log In
-        </Link>
+        <Link to="/">Log In</Link>
       </LinkContainer>
     </Container>
   );
