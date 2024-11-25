@@ -17,7 +17,7 @@ function Login() {
   return (
     <Container>
       <div>
-        <WelcomeText>Welcome to DAPNA Team</WelcomeText>
+        <WelcomeText>Welcome to TAPNA NAMA</WelcomeText>
         <FormWrapper>
           <Heading>Login</Heading>
 
