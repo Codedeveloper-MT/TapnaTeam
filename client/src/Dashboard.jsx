@@ -43,6 +43,41 @@ const Navbar = styled.div`
   padding: 0 20px;
 `;
 
+const SearchBar = styled.input`
+  padding: 8px;
+  border-radius: 5px;
+  border: none;
+  outline: none;
+`;
+
+const ProfileDropdown = styled.div`
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+
+  & ul {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: #fff;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    list-style: none;
+    padding: 10px;
+    display: ${({ show }) => (show ? "block" : "none")};
+
+    & li {
+      padding: 10px;
+      cursor: pointer;
+
+      &:hover {
+        background: #f0f0f0;
+      }
+    }
+  }
+`;
+
 const ContentArea = styled.div`
   flex: 1;
   padding: 20px;
@@ -54,26 +89,58 @@ const Greeting = styled.h1`
 `;
 
 const Dashboard = () => {
+  const [content, setContent] = useState("Welcome to your dashboard!");
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleSidebarClick = (item) => {
+    setContent(`You clicked on ${item}`);
+  };
+
+  const getGreetingMessage = () => {
+    const hour = new Date().getHours();
+    if (hour < 12) return "Good morning, User!";
+    if (hour < 18) return "Good afternoon, User!";
+    return "Good evening, User!";
+  };
+
   return (
     <DashboardContainer>
       <Sidebar>
         <h2>Menu</h2>
-        <SidebarItem>Dashboard</SidebarItem>
-        <SidebarItem>Profile</SidebarItem>
-        <SidebarItem>Settings</SidebarItem>
-        <SidebarItem>Logout</SidebarItem>
+        <SidebarItem onClick={() => handleSidebarClick("Dashboard")}>
+          Dashboard
+        </SidebarItem>
+        <SidebarItem onClick={() => handleSidebarClick("Profile")}>
+          Profile
+        </SidebarItem>
+        <SidebarItem onClick={() => handleSidebarClick("Settings")}>
+          Settings
+        </SidebarItem>
+        <SidebarItem onClick={() => handleSidebarClick("Logout")}>
+          Logout
+        </SidebarItem>
       </Sidebar>
       <ContentContainer>
         <Navbar>
           <h3>TapnaTeam Dashboard</h3>
-          <p>Welcome, User!</p>
+          <div>
+            <SearchBar type="text" placeholder="Search..." />
+            <ProfileDropdown
+              onClick={() => setDropdownOpen(!dropdownOpen)}
+              show={dropdownOpen}
+            >
+              <p>👤 Profile</p>
+              <ul>
+                <li onClick={() => alert("View Profile")}>View Profile</li>
+                <li onClick={() => alert("Settings")}>Settings</li>
+                <li onClick={() => alert("Logout")}>Logout</li>
+              </ul>
+            </ProfileDropdown>
+          </div>
         </Navbar>
         <ContentArea>
-          <Greeting>Hello, User! Here's your dashboard content.</Greeting>
-          <p>
-            This is the main area where you can display data, charts, or any
-            other dashboard features.
-          </p>
+          <Greeting>{getGreetingMessage()}</Greeting>
+          <p>{content}</p>
         </ContentArea>
       </ContentContainer>
     </DashboardContainer>
