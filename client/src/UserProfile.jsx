@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
 
-
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
@@ -13,7 +12,7 @@ const UserProfile = () => {
     skills: "JavaScript, HTML, CSS, React, Node.js, Python",
     email: "themisa.skosana@example.com",
     phone: "+27 123 456 7890",
-    avatar: "public/myPic.jpg", 
+    avatar: "public/myPic.jpg",
   });
 
   const [editableData, setEditableData] = useState(profileData);
@@ -21,7 +20,7 @@ const UserProfile = () => {
   const handleEditClick = () => {
     setIsEditing(!isEditing);
     if (isEditing) {
-      setEditableData(profileData); 
+      setEditableData(profileData);
     }
   };
 
@@ -43,102 +42,99 @@ const UserProfile = () => {
   };
 
   const handleFileClick = () => {
-    document.getElementById("fileInput").click(); 
+    document.getElementById("fileInput").click();
   };
 
   return (
-    <>
-      <Navbar />
-      <ProfileContainer>
-        <ProfileCard>
-          <ProfileHeader>
-            <ProfileAvatar src={profileData.avatar} alt="User Profile" />
-            <div>
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="name"
-                  value={editableData.name}
-                  onChange={handleChange}
-                />
-              ) : (
-                <ProfileName>{profileData.name}</ProfileName>
-              )}
-              {isEditing ? (
-                <input
-                  type="text"
-                  name="tagline"
-                  value={editableData.tagline}
-                  onChange={handleChange}
-                />
-              ) : (
-                <ProfileTagline>{profileData.tagline}</ProfileTagline>
-              )}
-            </div>
-          </ProfileHeader>
-          <ProfileDetails>
-            <SectionTitle>About Me</SectionTitle>
+    <ProfileContainer>
+      <ProfileCard>
+        <ProfileHeader>
+          <ProfileAvatar src={profileData.avatar} alt="User Profile" />
+          <div>
             {isEditing ? (
-              <textarea
-                name="about"
-                value={editableData.about}
-                onChange={handleChange}
-                rows="4"
-              />
-            ) : (
-              <ProfileText>{profileData.about}</ProfileText>
-            )}
-
-            <SectionTitle>Skills</SectionTitle>
-            {isEditing ? (
-              <textarea
-                name="skills"
-                value={editableData.skills}
-                onChange={handleChange}
-                rows="2"
-              />
-            ) : (
-              <ProfileText>{profileData.skills}</ProfileText>
-            )}
-
-            <SectionTitle>Contact Information</SectionTitle>
-            <ProfileText>
-              <strong>Email:</strong> {profileData.email}
-            </ProfileText>
-            <ProfileText>
-              <strong>Phone:</strong> {profileData.phone}
-            </ProfileText>
-
-            <SectionTitle>Change Profile Picture</SectionTitle>
-            <ProfileText>
-              <Label onClick={handleFileClick}>Choose Photo</Label>
               <input
-                id="fileInput"
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                style={{ display: "none" }} 
+                type="text"
+                name="name"
+                value={editableData.name}
+                onChange={handleChange}
               />
-            </ProfileText>
-          </ProfileDetails>
-
-          <ButtonGroup>
-            {isEditing ? (
-              <>
-                <Button onClick={handleEditClick}>Cancel</Button>
-                <Button primary onClick={handleSaveClick}>
-                  Save Changes
-                </Button>
-              </>
             ) : (
-              <Button primary onClick={handleEditClick}>
-                Edit Profile
-              </Button>
+              <ProfileName>{profileData.name}</ProfileName>
             )}
-          </ButtonGroup>
-        </ProfileCard>
-      </ProfileContainer>
-    </>
+            {isEditing ? (
+              <input
+                type="text"
+                name="tagline"
+                value={editableData.tagline}
+                onChange={handleChange}
+              />
+            ) : (
+              <ProfileTagline>{profileData.tagline}</ProfileTagline>
+            )}
+          </div>
+        </ProfileHeader>
+        <ProfileDetails>
+          <SectionTitle>About Me</SectionTitle>
+          {isEditing ? (
+            <textarea
+              name="about"
+              value={editableData.about}
+              onChange={handleChange}
+              rows="4"
+            />
+          ) : (
+            <ProfileText>{profileData.about}</ProfileText>
+          )}
+
+          <SectionTitle>Skills</SectionTitle>
+          {isEditing ? (
+            <textarea
+              name="skills"
+              value={editableData.skills}
+              onChange={handleChange}
+              rows="2"
+            />
+          ) : (
+            <ProfileText>{profileData.skills}</ProfileText>
+          )}
+
+          <SectionTitle>Contact Information</SectionTitle>
+          <ProfileText>
+            <strong>Email:</strong> {profileData.email}
+          </ProfileText>
+          <ProfileText>
+            <strong>Phone:</strong> {profileData.phone}
+          </ProfileText>
+
+          <SectionTitle>Change Profile Picture</SectionTitle>
+          <ProfileText>
+            <Label onClick={handleFileClick}>Choose Photo</Label>
+            <input
+              id="fileInput"
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </ProfileText>
+        </ProfileDetails>
+
+        <ButtonGroup>
+          {isEditing ? (
+            <>
+              <Button onClick={handleEditClick}>Cancel</Button>
+              <Button primary onClick={handleSaveClick}>
+                Save Changes
+              </Button>
+            </>
+          ) : (
+            <Button primary onClick={handleEditClick}>
+              Edit Profile
+            </Button>
+          )}
+        </ButtonGroup>
+      </ProfileCard>
+    </ProfileContainer>
   );
 };
 

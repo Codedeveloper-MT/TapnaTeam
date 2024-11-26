@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import React from "react";
+import React, { useState } from "react";
 import styled from "@emotion/styled";
-
 
 const DashboardContainer = styled.div`
   display: flex;
