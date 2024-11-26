@@ -1,90 +1,77 @@
+import React, { useState } from "react";
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import React, { useState } from "react";
-// import { Link } from "react-router-dom";
-import {
-  FaBell,
-  FaEnvelope,
-  FaCog,
-  FaHome,
-  FaSignOutAlt,
-} from "react-icons/fa";
 
-const NavBar = () => {
-  const handleLogout = () => {
-    // Handle logout functionality here
-    console.log("User logged out.");
-  };
+// Navbar component
+const Navbar = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav css={navBarStyle}>
-      <div css={logoStyle}>TapnaTeam</div>
-      <ul css={menuStyle}>
-        <li css={menuItemStyle}>
-          <FaHome /> <span>Home</span>
-        </li>
-        <li css={menuItemStyle}>
-          <FaBell /> <span>Notifications</span>
-        </li>
-        <li css={menuItemStyle}>
-          <FaEnvelope /> <span>Messages</span>
-        </li>
-        <li css={menuItemStyle}>
-          <FaCog /> <span>Settings</span>
-        </li>
-        <li css={menuItemStyle} onClick={handleLogout}>
-          <FaSignOutAlt /> <span>Logout</span>
-        </li>
-      </ul>
-    </nav>
+    <NavContainer>
+      <Logo>WebsiteLogo</Logo>
+      <HamburgerIcon onClick={toggleMenu}>
+        {isMenuOpen ? "X" : "☰"}
+      </HamburgerIcon>
+      <NavLinks isOpen={isMenuOpen}>
+        <NavLink href="/">Home</NavLink>
+        <NavLink href="/profile">Profile</NavLink>
+        <NavLink href="/tasks">Tasks</NavLink>
+        <NavLink href="/dashboard">Tasks</NavLink>
+      </NavLinks>
+    </NavContainer>
   );
 };
-
-// Styling
-const navBarStyle = css`
+// Navbar styling
+const NavContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
-  background-color: #2c3e50;
-  color: #fff;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  height: 60px;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #24292f;
+  color: white;
 `;
 
-const logoStyle = css`
+const Logo = styled.div`
   font-size: 1.5rem;
   font-weight: bold;
-  color: #ecf0f1;
 `;
 
-const menuStyle = css`
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`;
-
-const menuItemStyle = css`
-  margin: 0 15px;
-  display: flex;
-  align-items: center;
+const HamburgerIcon = styled.div`
+  font-size: 1.5rem;
+  display: none;
   cursor: pointer;
-  font-size: 1rem;
-  color: #ecf0f1;
-  transition: color 0.3s ease;
 
-  span {
-    margin-left: 5px;
+  @media (max-width: 768px) {
+    display: block;
   }
+`;
+
+const NavLinks = styled.div`
+  display: flex;
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    display: ${(props) => (props.isOpen ? "block" : "none")};
+    background-color: #24292f;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    left: 0;
+    padding: 10px;
+  }
+`;
+
+const NavLink = styled.a`
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
 
   &:hover {
-    color: #3498db;
+    text-decoration: underline;
   }
 `;
 
-// Exporting the NavBar component
-export default NavBar;
+export default Navbar;
+

@@ -1,15 +1,19 @@
+import React, { useState } from "react";
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
-import React, { useState } from "react";
+
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     name: "Themisa Skosana",
-    tagline: "BSc Student | Full-Stack Developer | Coffee Drinker",
+    tagline: "BSc Student | Full-Stack Developer | Coffee Enthusiast",
     about:
-      "I'm a computer science student passionate about creating innovative solutions. I enjoy coding, solving problems, and making technology accessible. When not programming, you'll find me enjoying cheesy dishes or exploring tech trends.",
-    skills: "JavaScript, HTML, CSS, React",
+      "I'm a passionate computer science student who thrives on solving real-world problems through innovative technology. When I'm not coding, you can find me enjoying a cup of coffee or diving into the latest tech trends. I'm driven to make technology more accessible and impactful.",
+    skills: "JavaScript, HTML, CSS, React, Node.js, Python",
+    email: "themisa.skosana@example.com",
+    phone: "+27 123 456 7890",
+    avatar: "public/myPic.jpg", 
   });
 
   const [editableData, setEditableData] = useState(profileData);
@@ -17,7 +21,7 @@ const UserProfile = () => {
   const handleEditClick = () => {
     setIsEditing(!isEditing);
     if (isEditing) {
-      setEditableData(profileData); // We will reset unsaved changes
+      setEditableData(profileData); 
     }
   };
 
@@ -31,74 +35,110 @@ const UserProfile = () => {
     setEditableData({ ...editableData, [name]: value });
   };
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setProfileData({ ...profileData, avatar: URL.createObjectURL(file) });
+    }
+  };
+
+  const handleFileClick = () => {
+    document.getElementById("fileInput").click(); 
+  };
+
   return (
-    <ProfileContainer>
-      <ProfileCard>
-        <ProfileHeader>
-          <ProfileAvatar src="public\myPic.jpg" alt="User Profile" />
-          <div>
+    <>
+      <Navbar />
+      <ProfileContainer>
+        <ProfileCard>
+          <ProfileHeader>
+            <ProfileAvatar src={profileData.avatar} alt="User Profile" />
+            <div>
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="name"
+                  value={editableData.name}
+                  onChange={handleChange}
+                />
+              ) : (
+                <ProfileName>{profileData.name}</ProfileName>
+              )}
+              {isEditing ? (
+                <input
+                  type="text"
+                  name="tagline"
+                  value={editableData.tagline}
+                  onChange={handleChange}
+                />
+              ) : (
+                <ProfileTagline>{profileData.tagline}</ProfileTagline>
+              )}
+            </div>
+          </ProfileHeader>
+          <ProfileDetails>
+            <SectionTitle>About Me</SectionTitle>
             {isEditing ? (
-              <input
-                type="text"
-                name="name"
-                value={editableData.name}
+              <textarea
+                name="about"
+                value={editableData.about}
                 onChange={handleChange}
+                rows="4"
               />
             ) : (
-              <ProfileName>{profileData.name}</ProfileName>
+              <ProfileText>{profileData.about}</ProfileText>
             )}
+
+            <SectionTitle>Skills</SectionTitle>
             {isEditing ? (
-              <input
-                type="text"
-                name="tagline"
-                value={editableData.tagline}
+              <textarea
+                name="skills"
+                value={editableData.skills}
                 onChange={handleChange}
+                rows="2"
               />
             ) : (
-              <ProfileTagline>{profileData.tagline}</ProfileTagline>
+              <ProfileText>{profileData.skills}</ProfileText>
             )}
-          </div>
-        </ProfileHeader>
-        <ProfileDetails>
-          <h2>About Me</h2>
-          {isEditing ? (
-            <textarea
-              name="about"
-              value={editableData.about}
-              onChange={handleChange}
-              rows="4"
-            />
-          ) : (
-            <p>{profileData.about}</p>
-          )}
-          <h2>Skills</h2>
-          {isEditing ? (
-            <textarea
-              name="skills"
-              value={editableData.skills}
-              onChange={handleChange}
-              rows="2"
-            />
-          ) : (
-            <p>{profileData.skills}</p>
-          )}
-        </ProfileDetails>
-        <ButtonGroup>
-          {isEditing ? (
-            <>
-              <Button onClick={handleEditClick}>Cancel</Button>
-              <Button primary onClick={handleSaveClick}>
-                Save Changes
+
+            <SectionTitle>Contact Information</SectionTitle>
+            <ProfileText>
+              <strong>Email:</strong> {profileData.email}
+            </ProfileText>
+            <ProfileText>
+              <strong>Phone:</strong> {profileData.phone}
+            </ProfileText>
+
+            <SectionTitle>Change Profile Picture</SectionTitle>
+            <ProfileText>
+              <Label onClick={handleFileClick}>Choose Photo</Label>
+              <input
+                id="fileInput"
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                style={{ display: "none" }} 
+              />
+            </ProfileText>
+          </ProfileDetails>
+
+          <ButtonGroup>
+            {isEditing ? (
+              <>
+                <Button onClick={handleEditClick}>Cancel</Button>
+                <Button primary onClick={handleSaveClick}>
+                  Save Changes
+                </Button>
+              </>
+            ) : (
+              <Button primary onClick={handleEditClick}>
+                Edit Profile
               </Button>
-            </>
-          ) : (
-            <Button primary onClick={handleEditClick}>
-              Edit Profile
-            </Button>
-          )}
-        </ButtonGroup>
-      </ProfileCard>
-    </ProfileContainer>
+            )}
+          </ButtonGroup>
+        </ProfileCard>
+      </ProfileContainer>
+    </>
   );
 };
 
@@ -126,10 +166,10 @@ const ProfileContainer = styled.div`
 const ProfileCard = styled.div`
   background: #fff;
   border: 1px solid #d1d5da;
-  border-radius: 6px;
-  max-width: 600px;
+  border-radius: 8px;
+  max-width: 700px;
   width: 100%;
-  padding: 20px;
+  padding: 30px;
   animation: ${fadeIn} 1.2s ease-in-out;
 `;
 
@@ -141,13 +181,14 @@ const ProfileHeader = styled.div`
 
 const ProfileAvatar = styled.img`
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 120px;
+  height: 120px;
   margin-right: 20px;
+  border: 3px solid #2ea44f;
 `;
 
 const ProfileName = styled.h1`
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   color: #24292e;
 `;
 
@@ -169,7 +210,7 @@ const ProfileDetails = styled.div`
   input {
     width: 100%;
     margin-bottom: 10px;
-    padding: 10px;
+    padding: 12px;
     border: 1px solid #d1d5da;
     border-radius: 6px;
     font-size: 1rem;
@@ -182,22 +223,41 @@ const ProfileDetails = styled.div`
   }
 `;
 
-const ButtonGroup = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
+const SectionTitle = styled.h3`
+  font-size: 1.2rem;
+  color: #24292e;
   margin-top: 20px;
 `;
 
-const Button = styled.button`
-  padding: 10px 15px;
-  border-radius: 6px;
-  border: none;
+const ProfileText = styled.p`
+  font-size: 1rem;
+  color: #586069;
+`;
+
+const Label = styled.label`
+  color: #2ea44f;
   cursor: pointer;
   font-size: 1rem;
-  background-color: ${(props) => (props.primary ? "#2ea44f" : "#d1d5da")};
-  color: ${(props) => (props.primary ? "#fff" : "#24292e")};
-  transition: background-color 0.3s ease;
+  text-decoration: underline;
+  &:hover {
+    color: #22863a;
+  }
+`;
+
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+`;
+
+const Button = styled.button`
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: ${(props) => (props.primary ? "#2ea44f" : "#f6f8fa")};
+  color: ${(props) => (props.primary ? "#fff" : "#24292f")};
 
   &:hover {
     background-color: ${(props) => (props.primary ? "#22863a" : "#c6ced6")};
