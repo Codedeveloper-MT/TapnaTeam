@@ -5,14 +5,13 @@ import styled from "@emotion/styled";
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    name: "Themisa Skosana",
-    tagline: "BSc Student | Full-Stack Developer | Coffee Enthusiast",
-    about:
-      "I'm a passionate computer science student who thrives on solving real-world problems through innovative technology. When I'm not coding, you can find me enjoying a cup of coffee or diving into the latest tech trends. I'm driven to make technology more accessible and impactful.",
-    skills: "JavaScript, HTML, CSS, React, Node.js, Python",
-    email: "themisa.skosana@example.com",
-    phone: "+27 123 456 7890",
-    avatar: "public/myPic.jpg",
+    name: " ",
+    tagline: " ",
+    about: " ",
+    skills: " ",
+    email: " ",
+    phone: " ",
+    avatar: " ",
   });
 
   const [editableData, setEditableData] = useState(profileData);
