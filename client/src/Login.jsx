@@ -36,7 +36,7 @@ function Login() {
   return (
     <Container>
       <div>
-        <WelcomeText>Welcome to TAPNA NAMA</WelcomeText>
+        <WelcomeText>TapnaTeam</WelcomeText>
         <FormWrapper>
           <Heading>Login</Heading>
 
@@ -126,7 +126,7 @@ const Container = styled.div`
   align-items: center;
   min-height: 100vh;
   padding: 20px;
-  background: #f5f7fa;
+  background: white;
   font-family: "Arial", sans-serif;
   animation: ${fadeIn} 1s ease-out;
 `;

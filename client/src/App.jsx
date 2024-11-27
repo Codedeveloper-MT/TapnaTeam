@@ -10,6 +10,9 @@ import TaskManagement from "./TaskManagement";
 import Admin from "./Admin";
 import CollaborationTools from "./CollaborationTools";
 import DependenciesPage from "./DependenciesPage";
+import TrackChanges from "./TrackChanges";
+import ManageProject from "./ManageProject";
+import Project from "./Project";
 
 function App() {
   return (
@@ -25,6 +28,9 @@ function App() {
         <Route path="/admin" element={<Admin />} />
         <Route path="/Collaborate-tool" element={<CollaborationTools />} />
         <Route path="/Dependencies-Page" element={<DependenciesPage />} />
+        <Route path="/Track-Changes" element={<TrackChanges />} />
+        <Route path="/Manage-Project" element={<ManageProject />} />
+        <Route path="/project" element={<Project />} />
       </Routes>
     </Router>
   );

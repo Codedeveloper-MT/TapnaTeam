@@ -247,17 +247,18 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  background-color: ${(props) => (props.primary ? "#2ea44f" : "#f6f8fa")};
-  color: ${(props) => (props.primary ? "#fff" : "#24292f")};
+padding: 10px 20px;
+font-size: 1rem;
+border: none;
+border-radius: 6px;
+cursor: pointer;
+background-color: ${(props) => (props.primary ? "#0366d6" : "#f6f8fa")}; /* Blue for primary */
+color: ${(props) => (props.primary ? "#fff" : "#24292f")};
 
-  &:hover {
-    background-color: ${(props) => (props.primary ? "#22863a" : "#c6ced6")};
-  }
+&:hover {
+  background-color: ${(props) => (props.primary ? "#005cc5" : "#c6ced6")}; /* Darker blue on hover */
+}
 `;
+
 
 export default UserProfile;

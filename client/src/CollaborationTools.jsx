@@ -1,242 +1,210 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react';
-import styled from '@emotion/styled';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
-// Styled components
-const Container = styled.div`
-  font-family: Arial, sans-serif;
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  background-color: #fff;
-  color: #333;
-  margin: 0;
-  overflow: hidden;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #dc3545;
-  color: white;
-  padding: 15px;
-  font-size: 1.5em;
-  font-weight: bold;
-  flex-shrink: 0;
-`;
-
-const ChatBox = styled.div`
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  overflow-y: auto;
-  padding: 15px;
-  background-color: #f0f0f0;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  margin: 0 15px 15px 15px;
-`;
-
-const MessageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-`;
-
-const SenderName = styled.div`
-  font-size: 0.9em;
-  color: #555;
-  font-weight: bold;
-`;
-
-const Message = styled.div`
-  padding: 10px;
-  border-radius: 8px;
-  background-color: ${({ sender }) => (sender === 'user' ? '#dcf8c6' : '#fff0f0')};
-  max-width: 60%;
-  align-self: ${({ sender }) => (sender === 'user' ? 'flex-end' : 'flex-start')};
-  margin: 5px 0;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-  border: ${({ sender }) => (sender === 'user' ? '1px solid #28a745' : '1px solid #dc3545')};
-  position: relative;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -5px;
-    left: ${({ sender }) => (sender === 'user' ? 'calc(100% + 5px)' : '-15px')};
-    border-left: 10px solid transparent;
-    border-right: 10px solid transparent;
-    border-bottom: ${({ sender }) => (sender === 'user' ? '10px solid #28a745' : '10px solid #dc3545')};
-  }
-`;
-
-const InputAreaContainer = styled.div`
-  display: flex;
-  gap: 10px;
-  padding: 15px;
-  background-color: #fff;
-  border-top: 1px solid #ddd;
-  flex-shrink: 0;
-  position: sticky;
-  bottom: 0;
-`;
-
-const InputArea = styled.input`
-  flex: 1;
-  padding: 10px;
-  font-size: 1em;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f0f0f0;
-`;
-
-const Button = styled.button`
-  background-color: #dc3545;
-  color: white;
-  padding: 10px 15px;
-  font-size: 1em;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: #c82333;
-  }
-`;
-
-const FilePreview = styled.div`
-  margin-top: 10px;
-  max-width: 200px;
-`;
-
-const ImagePreview = styled.img`
-  max-width: 100%;
-  border-radius: 8px;
-`;
-
-const DownloadButton = styled.a`
-  display: inline-block;
-  background-color: #28a745;
-  color: white;
-  padding: 8px 12px;
-  font-size: 1em;
-  border-radius: 5px;
-  text-decoration: none;
-  margin-top: 5px;
-
-  &:hover {
-    background-color: #218838;
-  }
-`;
-
-function CollaborationTools() {
-  const [messages, setMessages] = useState([]);
-  const [messageText, setMessageText] = useState('');
-  const [files, setFiles] = useState([]);
-
-  const handleSendMessage = () => {
-    if (messageText.trim() || files.length > 0) {
-      const newMessage = { sender: 'user', text: messageText, senderName: 'You' }; 
-
-      // Add message text if available
-      setMessages((prevMessages) => [...prevMessages, newMessage]);
-
-      // Add files if available
-      if (files.length > 0) {
-        files.forEach((file) => {
-          const fileMessage = { sender: 'user', text: `Shared file: ${file.name}`, file, senderName: 'You' };
-          setMessages((prevMessages) => [...prevMessages, fileMessage]);
-        });
-      }
-
-      // Clear the input fields after sending
-      setMessageText('');
-      setFiles([]);
+const App = () => {
+  const [comments, setComments] = useState([]);
+  const [username, setUsername] = useState('');
+  const [message, setMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [isSubmitted, setIsSubmitted] = useState(false); 
+  const handleSubmit = () => {
+    if (username === '' || message === '') {
+      setErrorMessage('Please enter both your name and message.');
+      return;
     }
-  };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFiles([...files, file]);
-    }
-  };
+    const currentDate = new Date();
+    const date = currentDate.toLocaleDateString();
+    const time = currentDate.toLocaleTimeString();
 
-  const renderFilePreview = (file) => {
-    const fileType = file.type.split('/')[0];
-    const fileUrl = URL.createObjectURL(file); 
+    const newComment = {
+      username,
+      message,
+      date,
+      time
+    };
 
-    if (fileType === 'image') {
-      return (
-        <FilePreview>
-          <ImagePreview src={fileUrl} alt={file.name} />
-          <DownloadButton href={fileUrl} download={file.name}>
-            Download
-          </DownloadButton>
-        </FilePreview>
-      );
-    } else if (fileType === 'application' && file.type.includes('pdf')) {
-      return (
-        <FilePreview>
-          <iframe
-            src={fileUrl}
-            title={file.name}
-            width="100%"
-            height="200px"
-            style={{ border: 'none' }}
-          />
-          <DownloadButton href={fileUrl} download={file.name}>
-            Download
-          </DownloadButton>
-        </FilePreview>
-      );
-    } else {
-      return (
-        <FilePreview>
-          <span>{file.name}</span>
-          <DownloadButton href={fileUrl} download={file.name}>
-            Download
-          </DownloadButton>
-        </FilePreview>
-      );
-    }
+    setComments([...comments, newComment]);
+    setMessage('');
+    setIsSubmitted(true); 
+    setErrorMessage(''); 
   };
 
   return (
-    <Container>
-      <Header>Collaboration Tools</Header>
-      <ChatBox>
-        {messages.map((msg, index) => (
-          <MessageContainer key={index}>
-            <SenderName>{msg.senderName}:</SenderName> 
-            <Message sender={msg.sender}>{msg.text}</Message>
-            {msg.file && renderFilePreview(msg.file)}
-          </MessageContainer>
-        ))}
-      </ChatBox>
-      <InputAreaContainer>
-        <InputArea
-          type="text"
-          value={messageText}
-          onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Type your message..."
-        />
-        <Button onClick={handleSendMessage}>Send</Button>
-        <Button as="label">
-          Attach
-          <input
-            type="file"
-            onChange={handleFileUpload}
-            style={{ display: 'none' }}
-          />
-        </Button>
-      </InputAreaContainer>
-    </Container>
-  );
-}
+    <div css={styles.body}>
+      <div css={styles.commentSection}>
+        
+      <Link to="/admin" css={styles.backButton}>← Back</Link>
+        <h2>Collaboration Room</h2>
 
-export default CollaborationTools;
+        <div css={styles.commentsContainer}>
+          {comments.map((comment, index) => (
+            <div
+              key={index}
+              css={[styles.comment, comment.username === username ? styles.sent : styles.received]}>
+              <div css={styles.sender}>{comment.username}</div>
+              <div>{comment.message}</div>
+              <div css={styles.timestamp}>{comment.date} {comment.time}</div>
+            </div>
+          ))}
+        </div>
+
+        {errorMessage && <div css={styles.errorMessage}>{errorMessage}</div>}
+      </div>
+
+      <div css={styles.commentFormContainer}>
+        <div css={styles.commentForm}>
+          <input
+            type="text"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Enter your name"
+            css={styles.input}
+            disabled={isSubmitted} 
+          />
+          <input
+            type="text"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Write your message here..."
+            css={styles.input}
+          />
+          <button onClick={handleSubmit} css={styles.button}>Send</button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const styles = {
+  body: css`
+    font-family: Arial, sans-serif;
+    background-color: blue;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 80vw;
+  `,
+  commentSection: css`
+    width: 100%;
+    max-width: 600px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+  `,
+  backButton: css`
+    background-color: #ddd;
+    color: #333;
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #bbb;
+    }
+  `,
+  commentsContainer: css`
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background-color: #f9f9f9;
+    width: 100%;
+  `,
+  comment: css`
+    max-width: 75%;
+    padding: 10px;
+    border-radius: 10px;
+    word-wrap: break-word;
+    font-size: 14px;
+    margin-bottom: 10px;
+  `,
+  sent: css`
+    align-self: flex-end;
+    background-color: #007BFF;
+    color: white;
+    border: 1px solid #0056b3;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+  `,
+  received: css`
+    align-self: flex-start;
+    background-color: black;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 80%;
+  `,
+  sender: css`
+    font-weight: bold;
+    margin-bottom: 5px;
+  `,
+  timestamp: css`
+    font-size: 10px;
+    color: #ddd;
+    margin-top: 5px;
+    text-align: right;
+  `,
+  errorMessage: css`
+    color: red;
+    font-size: 12px;
+    margin: 5px 0;
+  `,
+  commentFormContainer: css`
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  `,
+  commentForm: css`
+    display: flex;
+    gap: 10px;
+    width: 90%;
+    max-width: 600px;
+  `,
+  input: css`
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    flex: 1;
+  `,
+  button: css`
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  `
+};
+
+export default App;
