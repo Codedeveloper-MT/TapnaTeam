@@ -1,20 +1,95 @@
 /** @jsxImportSource @emotion/react */
-import React, { useState } from "react";
-import styled from "@emotion/styled";
+import { css } from '@emotion/react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const DashboardContainer = styled.div`
-  display: flex;
-  height: 100vh;
-`;
+const updateDateTime = () => {
+  const now = new Date();
+  const date = now.toLocaleDateString();
+  const time = now.toLocaleTimeString();
+  return `Date: ${date} | Time: ${time}`;
+};
 
-const Sidebar = styled.div`
-  width: 250px;
-  background-color: #333;
-  color: #fff;
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-`;
+const Dashboard = () => {
+  const [dateTime, setDateTime] = useState(updateDateTime());
+  const [username, setUsername] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setDateTime(updateDateTime());
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const loginUser = async (email, password) => {
+    const response = await fetch('http://localhost:5000/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await response.json();
+    if (data.token) {
+      setUsername(data.username);
+      localStorage.setItem('authToken', data.token);
+      setError('');
+    } else {
+      setError('Login failed: Invalid credentials');
+    }
+  };
+
+  useEffect(() => {
+    loginUser('user@example.com', 'password123');
+  }, []);
+
+  const bodyStyle = css`
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #007bff;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    padding: 20px;
+    color: #fff;
+    overflow: hidden;
+  `;
+
+  const headerStyle = css`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #fff;
+  `;
+
+  const titleStyle = css`
+    font-size: 36px;
+    font-weight: bold;
+    color: #fff;
+  `;
+
+  const infoStyle = css`
+    font-size: 18px;
+    color: #fff;
+  `;
+
+  const errorStyle = css`
+    font-size: 16px;
+    color: #e74c3c;
+    margin-top: 10px;
+  `;
+
+  const buttonContainerStyle = css`
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  `;
 
 const SidebarItem = styled.div`
   margin: 15px 0;
@@ -43,41 +118,6 @@ const Navbar = styled.div`
   padding: 0 20px;
 `;
 
-const SearchBar = styled.input`
-  padding: 8px;
-  border-radius: 5px;
-  border: none;
-  outline: none;
-`;
-
-const ProfileDropdown = styled.div`
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-
-  & ul {
-    position: absolute;
-    top: 40px;
-    right: 0;
-    background: #fff;
-    color: #333;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    list-style: none;
-    padding: 10px;
-    display: ${({ show }) => (show ? "block" : "none")};
-
-    & li {
-      padding: 10px;
-      cursor: pointer;
-
-      &:hover {
-        background: #f0f0f0;
-      }
-    }
-  }
-`;
-
 const ContentArea = styled.div`
   flex: 1;
   padding: 20px;
@@ -89,58 +129,26 @@ const Greeting = styled.h1`
 `;
 
 const Dashboard = () => {
-  const [content, setContent] = useState("Welcome to your dashboard!");
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  const handleSidebarClick = (item) => {
-    setContent(`You clicked on ${item}`);
-  };
-
-  const getGreetingMessage = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return "Good morning, User!";
-    if (hour < 18) return "Good afternoon, User!";
-    return "Good evening, User!";
-  };
-
   return (
     <DashboardContainer>
       <Sidebar>
         <h2>Menu</h2>
-        <SidebarItem onClick={() => handleSidebarClick("Dashboard")}>
-          Dashboard
-        </SidebarItem>
-        <SidebarItem onClick={() => handleSidebarClick("Profile")}>
-          Profile
-        </SidebarItem>
-        <SidebarItem onClick={() => handleSidebarClick("Settings")}>
-          Settings
-        </SidebarItem>
-        <SidebarItem onClick={() => handleSidebarClick("Logout")}>
-          Logout
-        </SidebarItem>
+        <SidebarItem>Dashboard</SidebarItem>
+        <SidebarItem>Profile</SidebarItem>
+        <SidebarItem>Settings</SidebarItem>
+        <SidebarItem>Logout</SidebarItem>
       </Sidebar>
       <ContentContainer>
         <Navbar>
           <h3>TapnaTeam Dashboard</h3>
-          <div>
-            <SearchBar type="text" placeholder="Search..." />
-            <ProfileDropdown
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              show={dropdownOpen}
-            >
-              <p>👤 Profile</p>
-              <ul>
-                <li onClick={() => alert("View Profile")}>View Profile</li>
-                <li onClick={() => alert("Settings")}>Settings</li>
-                <li onClick={() => alert("Logout")}>Logout</li>
-              </ul>
-            </ProfileDropdown>
-          </div>
+          <p>Welcome, User!</p>
         </Navbar>
         <ContentArea>
-          <Greeting>{getGreetingMessage()}</Greeting>
-          <p>{content}</p>
+          <Greeting>Hello, User! Here's your dashboard content.</Greeting>
+          <p>
+            This is the main area where you can display data, charts, or any
+            other dashboard features.
+          </p>
         </ContentArea>
       </ContentContainer>
     </DashboardContainer>

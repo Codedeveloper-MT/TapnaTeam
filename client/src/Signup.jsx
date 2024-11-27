@@ -8,7 +8,7 @@ const containerStyle = css`
   justify-content: center;
   height: 100vh;
   max-width: 100%;
-  background-color: #000; /* Black background */
+  background-color: blue;
 `;
 
 const cardStyle = css`
@@ -242,13 +242,6 @@ function Signup() {
             </button>
           </div>
         </form>
-      </div>
-      <div css={logoStyle}>
-        <img
-          src="/images/logo.jpeg"
-          alt="TapnaTeam Logo"
-          css={logoImageStyle}
-        />
       </div>
     </div>
   );
