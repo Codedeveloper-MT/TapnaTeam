@@ -1,5 +1,3 @@
-//Please be carefull when you're adding Code😭😢
-
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
