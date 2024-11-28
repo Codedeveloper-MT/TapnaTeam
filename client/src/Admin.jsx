@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
 import { FaTasks, FaUsers, FaToolbox, FaChartBar, FaSignOutAlt } from 'react-icons/fa';
+import Chart from 'chart.js/auto';
 
 const AppWrapper = styled.div`
   display: flex;
   height: 100vh;
+  flex-direction: row;
+   background-color: #000;
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
 `;
 
 const Sidebar = styled.div`
@@ -15,6 +21,11 @@ const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
   padding: 20px;
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 const SidebarItem = styled(Link)`
@@ -42,6 +53,11 @@ const MainContent = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding: 20px;
+
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const Header = styled.div`
@@ -56,8 +72,12 @@ const Header = styled.div`
 const Dashboard = styled.div`
   padding: 20px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
+   background-color: black;
+  @media (max-width: 768px) {
+    padding: 10px;
+  }
 `;
 
 const Card = styled.div`
@@ -65,197 +85,106 @@ const Card = styled.div`
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  display: flex;
   flex-direction: column;
   align-items: center;
-`;
-
-const CardTitle = styled.div`
-  font-size: 18px;
-  color: #7f8c8d;
-`;
-
-const CardValue = styled.div`
-  font-size: 32px;
-  font-weight: bold;
-  color: #2c3e50;
-`;
-
-const Button = styled.button`
-  padding: 10px;
-  margin: 5px;
-  background-color: blue;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: black;
-  }
-`;
-
-const GitHubInput = styled.div`
-  margin: 20px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Input = styled.input`
-  padding: 10px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  width: 300px;
-`;
-
-const GitHubResults = styled.div`
-  margin-top: 20px;
-  text-align: center;
-
-  p, ul {
-    color: #2c3e50;
-  }
-`;
-
-const GanttModal = styled.div`
-  display: ${(props) => (props.show ? 'flex' : 'none')};
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  justify-content: center;
-  align-items: center;
+
+  @media (max-width: 768px) {
+    padding: 15px;
+  }
 `;
 
-const GanttModalContent = styled.div`
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 90%;
-  max-width: 1200px;
-  height: 70%;
-`;
+const ChartWrapper = styled.div`
+  width: 100%;
+  height: 200px;
 
-const CloseButton = styled.button`
-  background-color: red;
-  color: white;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-
-  &:hover {
-    background-color: darkred;
+  @media (max-width: 768px) {
+    height: 300px;
   }
 `;
 
 function Admin() {
-  const [repositories, setRepositories] = useState([]);
-  const [ganttChartVisible, setGanttChartVisible] = useState(false);
-  const [resourcesValue, setResourcesValue] = useState('Loading...');
+  const [repoNames, setRepoNames] = useState([]);
+  const [stars, setStars] = useState([]);
 
-  const fetchGitHubData = async () => {
-    const username = document.getElementById('username').value.trim();
-    const results = document.getElementById('github-results');
+  useEffect(() => {
+    const fetchGitHubData = async () => {
+      try {
+        const username = 'octocat';
+        const response = await fetch(`https://api.github.com/users/${username}/repos`);
+        if (!response.ok) throw new Error('Error fetching data from GitHub.');
 
-    if (!username) {
-      results.innerHTML = `<p>Please enter a GitHub username.</p>`;
-      return;
-    }
+        const data = await response.json();
+        const repoNames = data.map(repo => repo.name);
+        const stars = data.map(repo => repo.stargazers_count);
 
-    try {
-      const response = await fetch(`https://api.github.com/users/${username}/repos`);
-      if (!response.ok) throw new Error('User or repositories not found');
-      const data = await response.json();
+        setRepoNames(repoNames);
+        setStars(stars);
 
-      setRepositories(data);
-      updateValue('projects-value', data.length);
-      results.innerHTML = `<p>Repositories fetched successfully. Press "Projects" to view them.</p>`;
-      data.forEach((repo) => fetchRepositoryResources(username, repo.name));
-      results.innerHTML += `<p>Found ${data.length} repositories:</p>`;
-    } catch (error) {
-      results.innerHTML = `<p>Error: ${error.message}</p>`;
-    }
-  };
-
-  const fetchRepositoryResources = async (username, repositoryName) => {
-    try {
-      const [issuesResponse, pullRequestsResponse] = await Promise.all([
-        fetch(`https://api.github.com/repos/${username}/${repositoryName}/issues`),
-        fetch(`https://api.github.com/repos/${username}/${repositoryName}/pulls`)
-      ]);
-
-      if (!issuesResponse.ok || !pullRequestsResponse.ok) {
-        throw new Error('Failed to fetch issues or pull requests');
+        renderGraph(repoNames, stars);
+      } catch (error) {
+        console.error('Error fetching GitHub data:', error);
       }
+    };
 
-      const issues = await issuesResponse.json();
-      const pullRequests = await pullRequestsResponse.json();
-      const resourceCount = issues.length + pullRequests.length;
+    fetchGitHubData();
+  }, []);
 
-      if (resourceCount > 0) {
-        setResourcesValue(`Resources: ${resourceCount} items`);
-      } else {
-        setResourcesValue('No resources found');
-      }
-    } catch {
-      setResourcesValue('Error fetching resources');
-    }
-  };
-
-  const updateValue = (id, value) => {
-    document.getElementById(id).innerText = value;
-  };
-
-  const openGanttChart = () => {
-    setGanttChartVisible(true);
-    drawGanttChart();
-  };
-
-  const closeGanttChart = () => {
-    setGanttChartVisible(false);
-  };
-
-  const drawGanttChart = () => {
+  const renderGraph = (repoNames, stars) => {
     const ctx = document.getElementById('gantt-chart').getContext('2d');
     new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: ['Task 1', 'Task 2', 'Task 3', 'Task 4'],
+        labels: repoNames,
         datasets: [
           {
-            label: 'Task Progress',
-            data: [50, 70, 30, 90],
-            backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c'],
-            borderColor: ['#2980b9', '#27ae60', '#f39c12', '#c0392b'],
-            borderWidth: 1
-          }
-        ]
+            label: 'Stars per Repository',
+            data: stars,
+            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+            borderColor: 'rgba(54, 162, 235, 1)',
+            borderWidth: 1,
+          },
+        ],
       },
       options: {
         responsive: true,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+          },
+        },
         scales: {
           y: {
             beginAtZero: true,
-            max: 100
-          }
-        }
-      }
+            title: {
+              display: true,
+              text: 'Stars',
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Repositories',
+            },
+          },
+        },
+      },
     });
   };
 
   return (
     <AppWrapper>
       <Sidebar>
+        <h1>Admin Dashboard</h1>
         <SidebarItem to="/task-management">
           <FaTasks /> Task Management
         </SidebarItem>
         <SidebarItem to="/team-management">
-          <FaUsers /> Team Management and File Sharing
+          <FaUsers /> Team Management
+        </SidebarItem>
+        <SidebarItem to="/graph">
+          <FaChartBar /> Analytics & Reporting
         </SidebarItem>
         <SidebarItem to="/collaborate-tool">
           <FaToolbox /> Collaboration Room
@@ -270,41 +199,17 @@ function Admin() {
 
       <MainContent>
         <Header>
-          <div>Admin Dashboard</div>
-          <div>Welcome to TapnaTeam</div>
+          <h2>Welcome to Admin Dashboard</h2>
         </Header>
-
         <Dashboard>
           <Card>
-            <CardTitle>Projects</CardTitle>
-            <CardValue id="projects-value">0</CardValue>
-            <Button>View Projects</Button>
-          </Card>
-          <Card>
-            <CardTitle>Team Progress</CardTitle>
-            <CardValue id="progress-value">0%</CardValue>
-            <Button onClick={openGanttChart}>Real-Time Progress Tracking</Button>
-          </Card>
-          <Card>
-            <CardTitle>Resources</CardTitle>
-            <CardValue id="resources-value">{resourcesValue}</CardValue>
+            <h3>GitHub Repositories and Stars</h3>
+            <ChartWrapper>
+              <canvas id="gantt-chart"></canvas>
+            </ChartWrapper>
           </Card>
         </Dashboard>
-
-        <GitHubInput>
-          <Input id="username" type="text" placeholder="Enter GitHub Username" />
-          <Button onClick={fetchGitHubData}>Fetch GitHub Data</Button>
-        </GitHubInput>
-
-        <GitHubResults id="github-results" />
       </MainContent>
-
-      <GanttModal show={ganttChartVisible}>
-        <GanttModalContent>
-          <CloseButton onClick={closeGanttChart}>Close</CloseButton>
-          <canvas id="gantt-chart" width="800" height="400"></canvas>
-        </GanttModalContent>
-      </GanttModal>
     </AppWrapper>
   );
 }

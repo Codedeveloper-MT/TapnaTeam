@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { css, keyframes } from "@emotion/react";
 import styled from "@emotion/styled";
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
@@ -132,12 +133,12 @@ const UserProfile = () => {
             </Button>
           )}
         </ButtonGroup>
+        <Link to="/admin">Back</Link>
       </ProfileCard>
     </ProfileContainer>
   );
 };
 
-// Styling
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -154,18 +155,21 @@ const ProfileContainer = styled.div`
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #f4f6f8;
+  width:60vh;
+  background: white;
   font-family: "Arial", sans-serif;
 `;
 
 const ProfileCard = styled.div`
-  background: #fff;
-  border: 1px solid #d1d5da;
+  background: white;
+  border: 1px solid blue;
   border-radius: 8px;
   max-width: 700px;
   width: 100%;
   padding: 30px;
   animation: ${fadeIn} 1.2s ease-in-out;
+  max-height: 80vh;
+  overflow-y: auto;
 `;
 
 const ProfileHeader = styled.div`
@@ -179,16 +183,16 @@ const ProfileAvatar = styled.img`
   width: 120px;
   height: 120px;
   margin-right: 20px;
-  border: 3px solid #2ea44f;
+  border: 3px solid blue;
 `;
 
 const ProfileName = styled.h1`
   font-size: 1.8rem;
-  color: #24292e;
+  color: blue;
 `;
 
 const ProfileTagline = styled.p`
-  color: #586069;
+  color: blue;
   margin-top: 5px;
 `;
 
@@ -197,7 +201,7 @@ const ProfileDetails = styled.div`
 
   h2 {
     font-size: 1.2rem;
-    color: #24292e;
+    color: blue;
     margin-bottom: 10px;
   }
 
@@ -206,58 +210,57 @@ const ProfileDetails = styled.div`
     width: 100%;
     margin-bottom: 10px;
     padding: 12px;
-    border: 1px solid #d1d5da;
+    border: 1px solid white;
     border-radius: 6px;
     font-size: 1rem;
   }
 
   p {
     font-size: 1rem;
-    color: #586069;
+    color: blue;
     margin: 5px 0;
   }
 `;
 
 const SectionTitle = styled.h3`
   font-size: 1.2rem;
-  color: #24292e;
+  color: blue;
   margin-top: 20px;
 `;
 
 const ProfileText = styled.p`
   font-size: 1rem;
-  color: #586069;
+  color: #007acc;
 `;
 
 const Label = styled.label`
-  color: #2ea44f;
+  color: #007acc;
   cursor: pointer;
   font-size: 1rem;
   text-decoration: underline;
   &:hover {
-    color: #22863a;
+    color:blue;
   }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
-  gap: 15px;
+  gap: 10px;
   margin-top: 30px;
 `;
 
 const Button = styled.button`
-padding: 10px 20px;
-font-size: 1rem;
-border: none;
-border-radius: 6px;
-cursor: pointer;
-background-color: ${(props) => (props.primary ? "#0366d6" : "#f6f8fa")}; /* Blue for primary */
-color: ${(props) => (props.primary ? "#fff" : "#24292f")};
+  padding: 10px 20px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  background-color: ${(props) => (props.primary ? "#007acc" : "#ffffff")};
+  color: ${(props) => (props.primary ? "#fff" : "#007acc")};
 
-&:hover {
-  background-color: ${(props) => (props.primary ? "#005cc5" : "#c6ced6")}; /* Darker blue on hover */
-}
+  &:hover {
+    background-color: ${(props) => (props.primary ? "#005fa3" : "#e6f1ff")};
+  }
 `;
-
 
 export default UserProfile;

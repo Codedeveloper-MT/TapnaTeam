@@ -13,6 +13,7 @@ import TrackChanges from "./TrackChanges";
 import ManageProject from "./ManageProject";
 import Project from "./Project";
 import HomePage from "./HomePage";
+import Graph from "./Graph";
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         <Route path="/Track-Changes" element={<TrackChanges />} />
         <Route path="/Manage-Project" element={<ManageProject />} />
         <Route path="/project" element={<Project />} />
+        <Route path="/graph" element={<Graph />} />
       </Routes>
     </Router>
   );
