@@ -256,12 +256,12 @@ function Graph() {
         <Header>
         <h1>Progress Tracking</h1>
         </Header>
+        <Link to="/admin">Back</Link>
         <Dashboard>
         <Card>
             <CardTitle>Projects</CardTitle>
             <CardValue>{repositories.length}</CardValue>
             <Button onClick={fetchGitHubData}>Search Repos</Button>
-            <Button>View Projects</Button>
           <h3>Enter a username to see repositories.</h3>
             <CardTitle>GitHub Username</CardTitle>
             <GitHubInput>

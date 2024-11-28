@@ -4,6 +4,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 
+const ResetPasswordForm = () => {
+  return (
+    <Container>
+      <Logo>TT</Logo>
+      <Heading>Reset Password</Heading>
+      <InputField type="email" placeholder="Enter your email address" />
+      <Button>Reset Password</Button>
+      <LinkContainer>
+        <p>Already have an account?</p>
+        <Link to="/login">Log In</Link>
+      </LinkContainer>
+    </Container>
+  );
+};
+
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -87,20 +103,5 @@ const LinkContainer = styled.div`
     }
   }
 `;
-
-const ResetPasswordForm = () => {
-  return (
-    <Container>
-      <Logo>TT</Logo>
-      <Heading>Reset Password</Heading>
-      <InputField type="email" placeholder="Enter your email address" />
-      <Button>Reset Password</Button>
-      <LinkContainer>
-        <p>Already have an account?</p>
-        <Link to="/login">Log In</Link>
-      </LinkContainer>
-    </Container>
-  );
-};
 
 export default ResetPasswordForm;
