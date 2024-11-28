@@ -3,16 +3,16 @@ import styled from "@emotion/styled";
 import React from "react";
 import { Link } from "react-router-dom";
 
-// Styled Components for Reset Password Form
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; /* Ensures container takes full height of viewport */
-  width: 100%;
+  min-height: 100vh; 
+  width: 170vh;
   padding: 20px;
-  background-color: #f8f9fa; /* Light background for a clean look */
+  background-color: white;
 `;
 
 const Logo = styled.div`
@@ -22,12 +22,12 @@ const Logo = styled.div`
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: #6c63ff; /* Accent color */
+  background-color: blue; 
   color: #fff;
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 `;
 
 const Heading = styled.h1`
@@ -50,14 +50,14 @@ const InputField = styled.input`
 
   &:focus {
     outline: none;
-    border-color: #6c63ff; /* Accent color for focus */
+    border-color: #6c63ff;
     box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
   }
 `;
 
 const Button = styled.button`
   padding: 12px 20px;
-  background-color: #6c63ff; /* Accent color */
+  background-color: blue;
   color: #fff;
   border: none;
   border-radius: 6px;
@@ -66,7 +66,7 @@ const Button = styled.button`
   transition: background-color 0.3s ease, transform 0.2s ease;
 
   &:hover {
-    background-color: #584dcb; /* Darker shade on hover */
+    background-color: #584dcb; 
     transform: translateY(-2px);
   }
 `;
@@ -91,13 +91,13 @@ const LinkContainer = styled.div`
 const ResetPasswordForm = () => {
   return (
     <Container>
-      <Logo>OT</Logo>
+      <Logo>TT</Logo>
       <Heading>Reset Password</Heading>
       <InputField type="email" placeholder="Enter your email address" />
       <Button>Reset Password</Button>
       <LinkContainer>
         <p>Already have an account?</p>
-        <Link to="/">Log In</Link>
+        <Link to="/login">Log In</Link>
       </LinkContainer>
     </Container>
   );

@@ -79,7 +79,7 @@ const TrackChanges = () => {
     doc.text("GitHub Activity Report", 20, 20);
 
     doc.setFontSize(12);
-    
+
     let activityText = activityLog.map((item) => item.props.dangerouslySetInnerHTML.__html.replace(/<\/?[^>]+(>|$)/g, ""));
     let logContent = activityText.join("\n\n");
 
@@ -109,69 +109,113 @@ const TrackChanges = () => {
   };
 
   return (
-    <div>
+    <div css={pageContainerStyle}>
       <header css={headerStyle}>
         <h1>Track Changes</h1>
         <p>Track your GitHub activity, commits, branch changes, and more!</p>
       </header>
-      <div css={fixedTopStyle}>
-        <h2>Enter GitHub Username and Repository</h2>
-        <label htmlFor="username">GitHub Username:</label>
-        <input
-          type="text"
-          id="username"
-          placeholder="e.g., octocat"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          css={inputStyle}
-        />
-        <label htmlFor="repository">Repository Name:</label>
-        <input
-          type="text"
-          id="repository"
-          placeholder="e.g., Hello-World"
-          value={repository}
-          onChange={e => setRepository(e.target.value)}
-          css={inputStyle}
-        />
-        <button onClick={fetchGitHubActivity} css={buttonStyle}>
-          Fetch Activity
-        </button>
-        <button onClick={downloadPDF} css={downloadButtonStyle}>
-          Download PDF
-        </button>
-        <button onClick={goBackToVersionControl} css={goBackButtonStyle}>
-          Go back to VersionControl
-        </button>
-      </div>
-      <div css={containerStyle}>
-        <h3>Activity Log</h3>
-        <div id="activityLog" css={activityLogStyle}>
-          {activityLog}
+
+      <div css={contentWrapperStyle}>
+        <aside css={sidebarStyle}>
+          <h2>Enter GitHub Username and Repository</h2>
+          <label htmlFor="username">GitHub Username:</label>
+          <input
+            type="text"
+            id="username"
+            placeholder="e.g., octocat"
+            value={username}
+            onChange={e => setUsername(e.target.value)}
+            css={inputStyle}
+          />
+          <label htmlFor="repository">Repository Name:</label>
+          <input
+            type="text"
+            id="repository"
+            placeholder="e.g., Hello-World"
+            value={repository}
+            onChange={e => setRepository(e.target.value)}
+            css={inputStyle}
+          />
+          <div css={buttonGroupStyle}>
+            <button onClick={fetchGitHubActivity} css={buttonStyle}>
+              Fetch Activity
+            </button>
+            <button onClick={downloadPDF} css={downloadButtonStyle}>
+              Download PDF
+            </button>
+            <button onClick={goBackToVersionControl} css={goBackButtonStyle}>
+              Go back to VersionControl
+            </button>
+          </div>
+        </aside>
+
+        <div css={mainContentStyle}>
+          <h3>Activity Log</h3>
+          <div id="activityLog" css={activityLogStyle}>
+            {activityLog}
+          </div>
+          <div id="branchInfo" css={branchInfoStyle}>
+            {branchInfo}
+          </div>
+          {error && <div css={errorStyle}>{error}</div>}
         </div>
-        <div id="branchInfo" css={branchInfoStyle}>
-          {branchInfo}
-        </div>
-        {error && <div css={errorStyle}>{error}</div>}
       </div>
     </div>
   );
 };
 
+const pageContainerStyle = css`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+`;
+
 const headerStyle = css`
   background-color: #007bff;
   color: white;
-  padding: 10px;
+  padding: 20px;
   text-align: center;
+  width: 100%;
+  margin-bottom: 20px;
 `;
 
-const fixedTopStyle = css`
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 1000;
+const contentWrapperStyle = css`
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1200px;
+  padding: 10px;
+  justify-content: space-between;
+`;
+
+const sidebarStyle = css`
+  width: 100%;
+  max-width: 480px;
   padding: 20px;
-  border-bottom: 1px solid #ddd;
+  background-color: #ffffff;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  border-radius: 8px;
+  flex: 1;
+  
+  @media (min-width: 768px) {
+    width: 48%;
+  }
+`;
+
+const mainContentStyle = css`
+  flex: 1;
+  padding: 20px;
+  background-color: #ffffff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  margin-left: 20px;
+  border-radius: 8px;
+  min-width: 320px;
+  
+  @media (min-width: 768px) {
+    width: 48%;
+  }
 `;
 
 const inputStyle = css`
@@ -179,12 +223,19 @@ const inputStyle = css`
   padding: 10px;
   margin: 10px 0;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 3px;
+`;
+
+const buttonGroupStyle = css`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
 `;
 
 const buttonStyle = css`
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: blue;
   color: white;
   border: none;
   border-radius: 5px;
@@ -196,61 +247,42 @@ const buttonStyle = css`
 
 const downloadButtonStyle = css`
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: blue;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 10px;
   &:hover {
-    background-color: #0056b3;
+    background-color: #218838;
   }
 `;
 
 const goBackButtonStyle = css`
   padding: 10px 20px;
-  background-color: #007bff;
+  background-color: blue;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  margin-left: 10px;
   &:hover {
-    background-color: #0056b3;
+    background-color: #c82333;
   }
-`;
-
-const containerStyle = css`
-  padding: 20px;
-  max-width: 800px;
-  margin: 0 auto;
-  overflow-x: auto;
 `;
 
 const activityLogStyle = css`
   margin-top: 20px;
-  padding: 10px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-height: 500px;
+  max-height: 400px;
   overflow-y: auto;
 `;
 
 const branchInfoStyle = css`
-  margin-top: 15px;
-  padding: 10px;
-  background-color: #e9ecef;
-  border-radius: 5px;
+  margin-top: 20px;
 `;
 
 const errorStyle = css`
+  color: red;
+  font-size: 14px;
   margin-top: 20px;
-  padding: 10px;
-  background-color: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
-  border-radius: 5px;
 `;
 
 export default TrackChanges;

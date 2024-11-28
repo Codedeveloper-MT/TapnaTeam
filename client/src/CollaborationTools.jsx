@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const App = () => {
+const CollaborationTools = () => {
   const [comments, setComments] = useState([]);
   const [username, setUsername] = useState('');
   const [message, setMessage] = useState('');
@@ -207,4 +207,4 @@ const styles = {
   `
 };
 
-export default App;
+export default CollaborationTools;

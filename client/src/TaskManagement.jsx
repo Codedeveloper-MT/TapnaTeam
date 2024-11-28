@@ -293,7 +293,7 @@ const inputStyle = css`
 `;
 
 const submitButtonStyle = css`
-    background-color: #0000FF;
+    background-color: blue;
     color: white;
     padding: 10px;
     border: none;

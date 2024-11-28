@@ -1,8 +1,7 @@
-/** @jsxImportSource @emotion/react */
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { Link } from 'react-router-dom';
-
+import { FaTasks, FaUsers, FaToolbox, FaChartBar, FaSignOutAlt } from 'react-icons/fa';
 
 const AppWrapper = styled.div`
   display: flex;
@@ -11,19 +10,31 @@ const AppWrapper = styled.div`
 
 const Sidebar = styled.div`
   width: 250px;
-  background-color: #000000;
+  background-color: #000;
   color: white;
   display: flex;
   flex-direction: column;
   padding: 20px;
 `;
 
-const SidebarItem = styled.div`
+const SidebarItem = styled(Link)`
+  text-decoration: none;
+  color: white;
   padding: 15px;
+  margin: 5px 0;
+  border-radius: 5px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.3s ease, color 0.3s ease;
 
   &:hover {
     background-color: white;
+    color: black;
+  }
+
+  svg {
+    margin-right: 10px;
   }
 `;
 
@@ -34,7 +45,7 @@ const MainContent = styled.div`
 `;
 
 const Header = styled.div`
-  background-color: #3498db;
+  background-color: blue;
   color: white;
   padding: 15px;
   display: flex;
@@ -45,12 +56,12 @@ const Header = styled.div`
 const Dashboard = styled.div`
   padding: 20px;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 20px;
 `;
 
 const Card = styled.div`
-  background-color: #ffffff;
+  background-color: #fff;
   border-radius: 8px;
   padding: 20px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -73,7 +84,7 @@ const CardValue = styled.div`
 const Button = styled.button`
   padding: 10px;
   margin: 5px;
-  background-color: #3498db;
+  background-color: blue;
   color: white;
   border: none;
   border-radius: 5px;
@@ -124,18 +135,22 @@ const GanttModalContent = styled.div`
   background-color: white;
   padding: 20px;
   border-radius: 8px;
-  width: 120%;
+  width: 90%;
   max-width: 1200px;
   height: 70%;
 `;
 
 const CloseButton = styled.button`
-  background-color: ;
+  background-color: red;
   color: white;
   padding: 10px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+
+  &:hover {
+    background-color: darkred;
+  }
 `;
 
 function Admin() {
@@ -158,15 +173,9 @@ function Admin() {
       const data = await response.json();
 
       setRepositories(data);
-
       updateValue('projects-value', data.length);
-
       results.innerHTML = `<p>Repositories fetched successfully. Press "Projects" to view them.</p>`;
-
-      data.forEach((repo) => {
-        fetchRepositoryResources(username, repo.name);
-      });
-
+      data.forEach((repo) => fetchRepositoryResources(username, repo.name));
       results.innerHTML += `<p>Found ${data.length} repositories:</p>`;
     } catch (error) {
       results.innerHTML = `<p>Error: ${error.message}</p>`;
@@ -186,7 +195,6 @@ function Admin() {
 
       const issues = await issuesResponse.json();
       const pullRequests = await pullRequestsResponse.json();
-
       const resourceCount = issues.length + pullRequests.length;
 
       if (resourceCount > 0) {
@@ -194,7 +202,7 @@ function Admin() {
       } else {
         setResourcesValue('No resources found');
       }
-    } catch (error) {
+    } catch {
       setResourcesValue('Error fetching resources');
     }
   };
@@ -218,13 +226,15 @@ function Admin() {
       type: 'bar',
       data: {
         labels: ['Task 1', 'Task 2', 'Task 3', 'Task 4'],
-        datasets: [{
-          label: 'Task Progress',
-          data: [50, 70, 30, 90],
-          backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c'],
-          borderColor: ['#2980b9', '#27ae60', '#f39c12', '#c0392b'],
-          borderWidth: 1
-        }]
+        datasets: [
+          {
+            label: 'Task Progress',
+            data: [50, 70, 30, 90],
+            backgroundColor: ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c'],
+            borderColor: ['#2980b9', '#27ae60', '#f39c12', '#c0392b'],
+            borderWidth: 1
+          }
+        ]
       },
       options: {
         responsive: true,
@@ -241,20 +251,21 @@ function Admin() {
   return (
     <AppWrapper>
       <Sidebar>
-      <Link to="/task-management">
-        <SidebarItem>Task Management</SidebarItem>
-        </Link>
-        <SidebarItem>Team Management and File Sharing</SidebarItem>
-        <Link to="/Collaborate-tool">
-        <SidebarItem>Collaboration Room</SidebarItem>
-        </Link>
-        <Link to="/profile">
-        <SidebarItem>Profile</SidebarItem>
-        </Link>
-        <SidebarItem>Analytics & Reportin</SidebarItem>
-        <Link to="/dashboard">
-          <SidebarItem>Dashboard</SidebarItem>
-        </Link>
+        <SidebarItem to="/task-management">
+          <FaTasks /> Task Management
+        </SidebarItem>
+        <SidebarItem to="/team-management">
+          <FaUsers /> Team Management and File Sharing
+        </SidebarItem>
+        <SidebarItem to="/collaborate-tool">
+          <FaToolbox /> Collaboration Room
+        </SidebarItem>
+        <SidebarItem to="/profile">
+          <FaChartBar /> Profile
+        </SidebarItem>
+        <SidebarItem to="/">
+          <FaSignOutAlt /> Log Out
+        </SidebarItem>
       </Sidebar>
 
       <MainContent>
@@ -267,15 +278,13 @@ function Admin() {
           <Card>
             <CardTitle>Projects</CardTitle>
             <CardValue id="projects-value">0</CardValue>
-            <Button onClick={() => window.location.href = 'projects.html'}>View Projects</Button>
+            <Button>View Projects</Button>
           </Card>
-
           <Card>
             <CardTitle>Team Progress</CardTitle>
             <CardValue id="progress-value">0%</CardValue>
             <Button onClick={openGanttChart}>Real-Time Progress Tracking</Button>
           </Card>
-
           <Card>
             <CardTitle>Resources</CardTitle>
             <CardValue id="resources-value">{resourcesValue}</CardValue>
@@ -285,8 +294,6 @@ function Admin() {
         <GitHubInput>
           <Input id="username" type="text" placeholder="Enter GitHub Username" />
           <Button onClick={fetchGitHubData}>Fetch GitHub Data</Button>
-          <Input id="repository" type="text" placeholder="Enter Repository Name" />
-          <Button onClick={() => {}}>Track Progress</Button>
         </GitHubInput>
 
         <GitHubResults id="github-results" />
@@ -294,8 +301,8 @@ function Admin() {
 
       <GanttModal show={ganttChartVisible}>
         <GanttModalContent>
-          <canvas id="gantt-chart"></canvas>
           <CloseButton onClick={closeGanttChart}>Close</CloseButton>
+          <canvas id="gantt-chart" width="800" height="400"></canvas>
         </GanttModalContent>
       </GanttModal>
     </AppWrapper>

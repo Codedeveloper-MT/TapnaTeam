@@ -14,7 +14,7 @@ function VersionControl() {
   };
 
   const handleHome = () => {
-    navigate('/dashboard');
+    navigate('/');
   };
 
   return (
@@ -27,7 +27,7 @@ function VersionControl() {
         Manage Project Version
       </button>
       <button css={styles.button} onClick={handleHome}>
-        DashBoard(Home)
+        Home
       </button>
     </div>
   );

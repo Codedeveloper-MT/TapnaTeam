@@ -4,105 +4,96 @@ import { Link } from "react-router-dom";
 
 const containerStyle = css`
   display: flex;
-  align-items: center;
   justify-content: center;
-  height: 100vh;
-  max-width: 100%;
-  background-color: blue;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f8ff;
+  padding: 20px;
 `;
 
 const cardStyle = css`
-  background-color: #ffffff;
-  padding: 2rem 2.5rem;
-  border-radius: 8px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   width: 100%;
   max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-`;
-
-const logoStyle = css`
-  text-align: center;
-  margin-bottom: 2rem;
-`;
-
-const logoImageStyle = css`
-  width: 80px;
-  height: auto;
 `;
 
 const headingStyle = css`
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
   text-align: center;
-  color: #000;
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #0066cc;
 `;
 
 const formStyle = css`
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* Ensure the form takes available space */
+  gap: 15px;
 `;
 
 const inputGroupStyle = css`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1rem;
+  flex-direction: column;
 `;
 
 const labelStyle = css`
-  font-size: 1rem;
-  font-weight: bold;
-  margin-right: 1rem;
+  font-size: 14px;
+  margin-bottom: 5px;
   color: #333;
-  flex: 1; /* Allow labels to take up equal space */
 `;
 
 const inputStyle = css`
-  padding: 0.75rem;
+  padding: 10px;
+  font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  flex: 2; /* Allow inputs to take up more space */
+  border-radius: 5px;
+  outline: none;
+
   &:focus {
-    outline: none;
-    border-color: #6c63ff; /* Accent color */
-    box-shadow: 0 0 0 2px rgba(108, 99, 255, 0.3);
+    border-color: #0066cc;
   }
 `;
 
 const buttonContainerStyle = css`
   display: flex;
-  justify-content: flex-start; /* Aligns the button to the bottom-left */
-  margin-top: auto; /* Pushes the button to the bottom */
+  justify-content: center;
 `;
 
 const buttonStyle = css`
-  background-color: #333;
-  color: #fff;
+  padding: 10px 20px;
+  background-color: #0066cc;
+  color: white;
+  font-size: 16px;
   border: none;
-  padding: 0.75rem;
-  border-radius: 8px;
-  font-size: 1rem;
+  border-radius: 5px;
   cursor: pointer;
-  transition: background-color 0.3s;
+
   &:hover {
-    background-color: #555;
+    background-color: #005bb5;
   }
 `;
 
 const errorStyle = css`
   color: red;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
-  text-align: center;
+  font-size: 14px;
+  margin-bottom: 10px;
 `;
 
-function Signup() {
+const successStyle = css`
+  color: green;
+  font-size: 14px;
+  margin-bottom: 10px;
+`;
+
+const successMessageStyle = css`
+  color: green;
+  font-size: 14px;
+  margin-bottom: 10px;
+`;
+
+const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -127,7 +118,6 @@ function Signup() {
       setError("");
 
       try {
-        // This part sends data to backend API for sign-up
         const response = await fetch("http://localhost:5002/signup", {
           method: "POST",
           headers: {
@@ -165,7 +155,7 @@ function Signup() {
         <h2 css={headingStyle}>Welcome to TapnaTeam</h2>
         <form onSubmit={handleSubmit} css={formStyle}>
           {error && <p css={errorStyle}>{error}</p>}
-          {successMessage && <p css={successStyle}>{successMessage}</p>}
+          {successMessage && <p css={successMessageStyle}>{successMessage}</p>}
           <div css={inputGroupStyle}>
             <label htmlFor="name" css={labelStyle}>
               Username:
@@ -236,7 +226,7 @@ function Signup() {
           </div>
           <div css={buttonContainerStyle}>
             <button css={buttonStyle}>
-              <Link to="/" css={{ marginLeft: "8px", color: "#6c63ff" }}>
+              <Link to="/login" css={{ marginLeft: "8px", color: "#6c63ff" }}>
                 Log In
               </Link>
             </button>
@@ -245,6 +235,6 @@ function Signup() {
       </div>
     </div>
   );
-}
+};
 
 export default Signup;

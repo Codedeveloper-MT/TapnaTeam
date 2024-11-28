@@ -24,12 +24,12 @@ function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        navigate("/dashboard");
+        navigate("/admin");
       } else {
         setError(data.message);
       }
     } catch (err) {
-      setError("Error logging in. Please try again.");
+      setError("Enter Correct Email Address or Password ");
     }
   };
 
@@ -70,9 +70,9 @@ function Login() {
           </SignUpLink>
 
           <Link to="/reset-password">Forgot Password?</Link>
-
+          
           <Separator />
-
+          <Link to="/">Go Back To Home</Link>
           <GoogleButton>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -124,12 +124,14 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 70vh;
   padding: 20px;
-  background: white;
+  background: blue;
   font-family: "Arial", sans-serif;
+  width: 180vh;
   animation: ${fadeIn} 1s ease-out;
 `;
+
 
 const FormWrapper = styled.div`
   background-color: #ffffff;
@@ -147,7 +149,7 @@ const FormWrapper = styled.div`
 const WelcomeText = styled.h1`
   font-size: 1.8rem;
   font-weight: bold;
-  color: #2c3e50;
+  color: white;
   text-align: center;
   margin-bottom: 20px;
 `;
@@ -169,7 +171,7 @@ const Form = styled.form`
 const Label = styled.label`
   font-size: 0.9rem;
   margin-bottom: 8px;
-  color: #2c3e50;
+  color: black;
 `;
 
 const Input = styled.input`
@@ -194,7 +196,7 @@ const Button = styled.button`
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  background-color: #3498db;
+  background-color: blue;
   color: white;
   font-size: 0.9rem;
   transition: transform 0.2s ease, background-color 0.3s ease;
@@ -225,8 +227,8 @@ const GoogleButton = styled.button`
   margin: 8px 0;
   border: 1px solid #ccc;
   border-radius: 6px;
-  background-color: transparent;
-  color: #2c3e50;
+  background-color: blue;
+  color: white;
   font-size: 0.9rem;
   width: 100%;
   display: flex;
