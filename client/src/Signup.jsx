@@ -87,12 +87,6 @@ const successStyle = css`
   margin-bottom: 10px;
 `;
 
-const successMessageStyle = css`
-  color: green;
-  font-size: 14px;
-  margin-bottom: 10px;
-`;
-
 const Signup = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -100,7 +94,6 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
-
   const [error, setError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -114,123 +107,107 @@ const Signup = () => {
 
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match!");
-    } else {
-      setError("");
+      return;
+    }
 
-      try {
-        const response = await fetch("http://localhost:5002/signup", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-          }),
-        });
+    try {
+      const response = await fetch("http://localhost:5002/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
 
-        const result = await response.json();
+      const result = await response.json();
 
-        if (response.ok) {
-          setSuccessMessage("Sign-up successful! Please log in.");
-          setFormData({
-            name: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          });
-        } else {
-          setError(result.message);
-        }
-      } catch (error) {
-        setError("Error signing up. Please try again.");
+      if (response.ok) {
+        setSuccessMessage(result.message);
+        setFormData({ name: "", email: "", password: "", confirmPassword: "" });
+        setError("");
+      } else {
+        setError(result.message);
       }
+    } catch {
+      setError("Error signing up. Please try again.");
     }
   };
 
   return (
     <div css={containerStyle}>
       <div css={cardStyle}>
-        <h2 css={headingStyle}>Welcome to TapnaTeam</h2>
-        <form onSubmit={handleSubmit} css={formStyle}>
-          {error && <p css={errorStyle}>{error}</p>}
-          {successMessage && <p css={successMessageStyle}>{successMessage}</p>}
+        <h2 css={headingStyle}>Sign Up</h2>
+        {error && <p css={errorStyle}>{error}</p>}
+        {successMessage && <p css={successStyle}>{successMessage}</p>}
+        <form css={formStyle} onSubmit={handleSubmit}>
           <div css={inputGroupStyle}>
-            <label htmlFor="name" css={labelStyle}>
-              Username:
+            <label css={labelStyle} htmlFor="name">
+              Name
             </label>
             <input
               type="text"
-              id="name"
               name="name"
-              placeholder="Enter your username"
+              id="name"
+              placeholder="Name"
               value={formData.name}
               onChange={handleChange}
-              required
               css={inputStyle}
+              required
             />
           </div>
           <div css={inputGroupStyle}>
-            <label htmlFor="email" css={labelStyle}>
-              Email:
+            <label css={labelStyle} htmlFor="email">
+              Email
             </label>
             <input
               type="email"
-              id="email"
               name="email"
-              placeholder="Enter your email"
+              id="email"
+              placeholder="Email"
               value={formData.email}
               onChange={handleChange}
-              required
               css={inputStyle}
+              required
             />
           </div>
           <div css={inputGroupStyle}>
-            <label htmlFor="password" css={labelStyle}>
-              Password:
+            <label css={labelStyle} htmlFor="password">
+              Password
             </label>
             <input
               type="password"
-              id="password"
               name="password"
-              placeholder="Enter your password"
+              id="password"
+              placeholder="Password"
               value={formData.password}
               onChange={handleChange}
-              required
               css={inputStyle}
+              required
             />
           </div>
           <div css={inputGroupStyle}>
-            <label htmlFor="confirmPassword" css={labelStyle}>
-              Confirm Password:
+            <label css={labelStyle} htmlFor="confirmPassword">
+              Confirm Password
             </label>
             <input
               type="password"
-              id="confirmPassword"
               name="confirmPassword"
-              placeholder="Confirm your password"
+              id="confirmPassword"
+              placeholder="Confirm Password"
               value={formData.confirmPassword}
               onChange={handleChange}
-              required
               css={inputStyle}
+              required
             />
           </div>
-          <div css={buttonContainerStyle}>
-            <button type="submit" css={buttonStyle}>
-              Sign Up
-            </button>
-          </div>
-          <div>
-            <p>Already have an account?</p>
-          </div>
-          <div css={buttonContainerStyle}>
-            <button css={buttonStyle}>
-              <Link to="/login" css={{ marginLeft: "8px", color: "#6c63ff" }}>
-                Log In
-              </Link>
-            </button>
-          </div>
+          <button type="submit" css={buttonStyle}>
+            Sign Up
+          </button>
+          <p>
+            Already have an account? <Link to="/login">Log In</Link>
+          </p>
         </form>
       </div>
     </div>

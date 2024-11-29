@@ -1,32 +1,88 @@
-import { css, keyframes } from "@emotion/react";
+import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom"; // useNavigate replaces useHistory
+import axios from "axios";
 import styled from "@emotion/styled";
-import React from "react";
-import { Link } from "react-router-dom";
-
 
 const ResetPasswordForm = () => {
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate(); // useNavigate replaces useHistory
+  const { token } = useParams(); // Get token from URL
+
+  // Handle password reset request
+  const handleResetRequest = async (e) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+
+    setLoading(true); // Show loading state
+
+    try {
+      const response = await axios.post(
+        `http://localhost:5002/reset-password/${token}`,
+        { password }
+      );
+      setMessage(response.data.message);
+      setTimeout(() => {
+        navigate("/login"); // Use navigate to redirect to login page
+      }, 2000);
+    } catch (error) {
+      setError(error.response?.data?.message || "Error resetting password");
+    } finally {
+      setLoading(false); // Hide loading state
+    }
+  };
+
   return (
     <Container>
       <Logo>TT</Logo>
       <Heading>Reset Password</Heading>
-      <InputField type="email" placeholder="Enter your email address" />
-      <Button>Reset Password</Button>
+      {message && <SuccessMessage>{message}</SuccessMessage>}
+      {error && <ErrorMessage>{error}</ErrorMessage>}
+
+      <form onSubmit={handleResetRequest}>
+        <InputField
+          type="password"
+          placeholder="Enter new password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <InputField
+          type="password"
+          placeholder="Confirm new password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+        />
+        <Button type="submit" disabled={loading}>
+          {loading ? "Resetting..." : "Reset Password"}
+        </Button>
+      </form>
+
       <LinkContainer>
-        <p>Already have an account?</p>
+        <p>Remember your password?</p>
         <Link to="/login">Log In</Link>
       </LinkContainer>
     </Container>
   );
 };
 
-
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 100vh; 
-  width: 170vh;
+  min-height: 100vh;
+  width: 100%;
   padding: 20px;
   background-color: white;
 `;
@@ -38,12 +94,11 @@ const Logo = styled.div`
   width: 80px;
   height: 80px;
   border-radius: 50%;
-  background-color: blue; 
+  background-color: blue;
   color: #fff;
   font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 20px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); 
 `;
 
 const Heading = styled.h1`
@@ -51,7 +106,6 @@ const Heading = styled.h1`
   font-weight: bold;
   color: #333;
   margin-bottom: 20px;
-  text-align: center;
 `;
 
 const InputField = styled.input`
@@ -62,13 +116,6 @@ const InputField = styled.input`
   max-width: 350px;
   margin-bottom: 15px;
   font-size: 1rem;
-  box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
-
-  &:focus {
-    outline: none;
-    border-color: #6c63ff;
-    box-shadow: 0 0 5px rgba(108, 99, 255, 0.5);
-  }
 `;
 
 const Button = styled.button`
@@ -79,29 +126,31 @@ const Button = styled.button`
   border-radius: 6px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
 
-  &:hover {
-    background-color: #584dcb; 
-    transform: translateY(-2px);
+  &:disabled {
+    background-color: grey;
   }
+`;
+
+const SuccessMessage = styled.div`
+  color: green;
+  margin-bottom: 20px;
+`;
+
+const ErrorMessage = styled.div`
+  color: red;
+  margin-bottom: 20px;
 `;
 
 const LinkContainer = styled.div`
   margin-top: 20px;
-  font-size: 0.9rem;
-  color: #333;
   text-align: center;
+`;
 
-  & a {
-    color: #6c63ff;
-    text-decoration: none;
-    font-weight: bold;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
+const Link = styled.a`
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
 `;
 
 export default ResetPasswordForm;
