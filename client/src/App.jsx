@@ -14,6 +14,8 @@ import ManageProject from "./ManageProject";
 import Project from "./Project";
 import HomePage from "./HomePage";
 import Graph from "./Graph";
+import Management from "./Management";
+import FileSchudule from "./FileSchudule";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path="/Manage-Project" element={<ManageProject />} />
         <Route path="/project" element={<Project />} />
         <Route path="/graph" element={<Graph />} />
+        <Route path="/team-management" element={<Management />} />
+        <Route path="/file-Schudule" element={<FileSchudule />} />
       </Routes>
     </Router>
   );

@@ -8,7 +8,7 @@ const AppWrapper = styled.div`
   display: flex;
   height: 100vh;
   flex-direction: row;
-   background-color: #000;
+  background-color: #000;
   @media (max-width: 768px) {
     flex-direction: column;
   }
@@ -74,7 +74,7 @@ const Dashboard = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
-   background-color: black;
+  background-color: black;
   @media (max-width: 768px) {
     padding: 10px;
   }
@@ -106,6 +106,7 @@ const ChartWrapper = styled.div`
 function Admin() {
   const [repoNames, setRepoNames] = useState([]);
   const [stars, setStars] = useState([]);
+  const [currentDateTime, setCurrentDateTime] = useState(new Date().toLocaleString());
 
   useEffect(() => {
     const fetchGitHubData = async () => {
@@ -128,6 +129,14 @@ function Admin() {
     };
 
     fetchGitHubData();
+
+    
+    const intervalId = setInterval(() => {
+      setCurrentDateTime(new Date().toLocaleString());
+    }, 1000);
+
+    
+    return () => clearInterval(intervalId);
   }, []);
 
   const renderGraph = (repoNames, stars) => {
@@ -176,12 +185,14 @@ function Admin() {
   return (
     <AppWrapper>
       <Sidebar>
-        <h1>Admin Dashboard</h1>
         <SidebarItem to="/task-management">
           <FaTasks /> Task Management
         </SidebarItem>
         <SidebarItem to="/team-management">
           <FaUsers /> Team Management
+        </SidebarItem>
+        <SidebarItem to="/file-Schudule">
+          <FaUsers /> Event Management And File Shering
         </SidebarItem>
         <SidebarItem to="/graph">
           <FaChartBar /> Analytics & Reporting
@@ -208,6 +219,7 @@ function Admin() {
               <canvas id="gantt-chart"></canvas>
             </ChartWrapper>
           </Card>
+          <Card><span>{currentDateTime}</span></Card>
         </Dashboard>
       </MainContent>
     </AppWrapper>

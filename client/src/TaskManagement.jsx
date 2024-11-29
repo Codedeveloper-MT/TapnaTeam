@@ -189,6 +189,7 @@ const TaskManagement = () => {
     return (
         <div css={appStyle}>
             <div css={sidebarStyle}>
+            <h3>Welcome to Task Management</h3>
                 <button onClick={() => navigate('/Dependencies-Page')} css={buttonStyle}>
                     Task Dependencies
                 </button>
@@ -213,12 +214,6 @@ const TaskManagement = () => {
             </div>
 
             <div css={contentStyle}>
-                {content === 'welcome' && (
-                    <div>
-                        <h1>Welcome to Task Management</h1>
-                        <p>Use the sidebar to navigate through the options.</p>
-                    </div>
-                )}
                 {content === 'createTask' && renderCreateTaskForm()}
                 {content === 'taskList' && renderTaskList()}
                 {content === 'taskAssignment' && renderTaskAssignment()}
@@ -233,19 +228,20 @@ const TaskManagement = () => {
         </div>
     );
 };
-
 const appStyle = css`
     display: flex;
     min-height: 100vh;
-    background-color: #f0f2f5;
+    background-color: white;
     font-family: Arial, sans-serif;
+    @media (max-width: 768px) {
+        flex-direction: column;
+    }
 `;
 
 const sidebarStyle = css`
-    position: fixed;
     top: 0;
     left: 0;
-    background-color: #0000FF;
+    background-color: black;
     color: white;
     width: 250px;
     padding: 20px;
@@ -254,6 +250,11 @@ const sidebarStyle = css`
     align-items: flex-start;
     height: 100%;
     overflow-y: auto;
+    @media (max-width: 768px) {
+        width: 100%;
+        position: relative;
+        padding: 10px;
+    }
 `;
 
 const contentStyle = css`
@@ -261,11 +262,14 @@ const contentStyle = css`
     flex-grow: 1;
     padding: 20px;
     overflow-y: auto;
+    @media (max-width: 768px) {
+        margin-left: 0;
+    }
 `;
 
 const buttonStyle = css`
-    background-color: #FFFFFF;
-    color: #0000FF;
+    background-color: blue;
+    color: white;
     padding: 12px;
     margin: 8px 0;
     width: 100%;
@@ -273,15 +277,18 @@ const buttonStyle = css`
     cursor: pointer;
     text-align: left;
     border-radius: 5px;
-
     &:hover {
-        background-color: #f0f0f0;
+        background-color: black;
+    }
+    @media (max-width: 768px) {
+        padding: 10px;
     }
 `;
 
 const formStyle = css`
     display: flex;
     flex-direction: column;
+    width: 100%;
 `;
 
 const inputStyle = css`
@@ -290,10 +297,13 @@ const inputStyle = css`
     margin: 8px 0;
     border: 1px solid #ccc;
     border-radius: 5px;
+    @media (max-width: 768px) {
+        padding: 8px;
+    }
 `;
 
 const submitButtonStyle = css`
-    background-color: blue;
+    background-color: black;
     color: white;
     padding: 10px;
     border: none;
@@ -301,9 +311,11 @@ const submitButtonStyle = css`
     cursor: pointer;
     width: 100%;
     font-size: 16px;
-
     &:hover {
         background-color: #3333ff;
+    }
+    @media (max-width: 768px) {
+        font-size: 14px;
     }
 `;
 
@@ -314,14 +326,20 @@ const taskListContainerStyle = css`
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     max-width: 800px;
     margin: 20px auto;
+    @media (max-width: 768px) {
+        padding: 10px;
+    }
 `;
 
 const taskItemStyle = css`
     margin-bottom: 10px;
     padding: 10px;
-    background-color: #f9f9f9;
+    background-color: white;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    @media (max-width: 768px) {
+        padding: 8px;
+    }
 `;
 
 const deleteButtonStyle = css`
@@ -332,7 +350,6 @@ const deleteButtonStyle = css`
     border-radius: 5px;
     cursor: pointer;
     margin-left: 10px;
-
     &:hover {
         background-color: #cc0000;
     }
@@ -347,11 +364,15 @@ const createTaskFormContainerStyle = css`
     margin: 20px auto;
     height: 400px;
     overflow-y: auto;
+    @media (max-width: 768px) {
+        max-width: 100%;
+    }
 `;
 
 const errorTextStyle = css`
     color: red;
     font-size: 14px;
+    margin-bottom: 10px;
 `;
 
 export default TaskManagement;
