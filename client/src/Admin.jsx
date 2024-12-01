@@ -192,7 +192,7 @@ function Admin() {
           <FaUsers /> Team Management
         </SidebarItem>
         <SidebarItem to="/file-Schudule">
-          <FaUsers /> Event Management And File Shering
+          <FaUsers /> Event Management And File Sharing
         </SidebarItem>
         <SidebarItem to="/graph">
           <FaChartBar /> Analytics & Reporting

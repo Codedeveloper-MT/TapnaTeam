@@ -1,8 +1,6 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Login";
-import Signup from "./Signup";
-import ResetPasswordForm from "./ResetPasswordForm";
 import UserProfile from "./UserProfile";
 import VersionControl from "./VersionControl";
 import TaskManagement from "./TaskManagement";
@@ -16,6 +14,9 @@ import HomePage from "./HomePage";
 import Graph from "./Graph";
 import Management from "./Management";
 import FileSchudule from "./FileSchudule";
+import taskCreation from "./taskCreation";
+
+
 
 function App() {
   return (
@@ -23,8 +24,6 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<HomePage />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/reset-password" element={<ResetPasswordForm />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/version-control" element={<VersionControl />} />
         <Route path="/task-management" element={<TaskManagement />} />
@@ -37,6 +36,7 @@ function App() {
         <Route path="/graph" element={<Graph />} />
         <Route path="/team-management" element={<Management />} />
         <Route path="/file-Schudule" element={<FileSchudule />} />
+        <Route path="/task-creation" element={<taskCreation />} />
       </Routes>
     </Router>
   );

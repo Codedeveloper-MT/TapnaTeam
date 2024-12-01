@@ -1,213 +1,135 @@
-import React, { useState } from "react";
-import styled from "@emotion/styled";
+/** @jsxImportSource @emotion/react */
+import { css } from '@emotion/react';
+import React, { useState, useEffect } from 'react';
 
 const UserProfile = () => {
-  const [profileData, setProfileData] = useState({
-    name: "",
-    surname: "",
-    about: "",
-    email: "",
-    phone: "",
-    avatar: "",
+  const [username, setUsername] = useState('');
+  const [user, setUser] = useState(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editData, setEditData] = useState({
+    displayName: '',
+    email: '',
+    photos: '',
   });
 
-  const [isEditing, setIsEditing] = useState(true); // Show edit page initially for new users
+  const handleUsernameChange = (e) => setUsername(e.target.value);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setProfileData({ ...profileData, [name]: value });
+  const fetchUserProfile = () => {
+    fetch(`http://localhost:5002/profile/${username}`, {
+      method: 'GET',
+      credentials: 'same-origin',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setUser(data);
+        setEditData({
+          displayName: data.displayName,
+          email: data.email,
+          photos: data.photos?.[0]?.value || '',
+        });
+      })
+      .catch((err) => console.error('Error fetching user profile:', err));
   };
 
-  const handleSaveChanges = () => {
-    setIsEditing(false);
+  const saveUserProfile = () => {
+    fetch(`http://localhost:5002/profile/${username}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(editData),
+      credentials: 'same-origin',
+    })
+      .then((response) => response.json())
+      .then(() => {
+        setUser(editData);
+        setIsEditing(false);
+      })
+      .catch((err) => console.error('Error saving user profile:', err));
   };
 
-  const handleEditClick = () => {
-    setIsEditing(true);
+  const toggleEditMode = () => {
+    setIsEditing((prev) => !prev);
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setProfileData({ ...profileData, avatar: URL.createObjectURL(file) });
-    }
-  };
+  if (!user) {
+    return (
+      <div>
+        <h2>Enter a GitHub Username:</h2>
+        <input
+          type="text"
+          value={username}
+          onChange={handleUsernameChange}
+          placeholder="GitHub Username"
+        />
+        <button onClick={fetchUserProfile}>Fetch Profile</button>
+      </div>
+    );
+  }
 
   return (
-    <ProfileContainer>
+    <div css={styles.container}>
+      <h1 css={styles.title}>Profile: {user.displayName}</h1>
+      <h2 css={styles.username}>Username: {user.username}</h2>
+      <img
+        src={user.photos?.[0]?.value || 'default-image-url'}
+        alt="Profile"
+        css={styles.image}
+      />
       {isEditing ? (
-        <ProfileCard>
-          <ProfileHeader>
-            <ProfileAvatar
-              src={profileData.avatar || "https://via.placeholder.com/100"}
-              alt="Profile Avatar"
-            />
-            <input type="file" onChange={handleImageChange} />
-          </ProfileHeader>
-          <InputField
+        <div>
+          <input
             type="text"
-            name="name"
-            placeholder="First Name"
-            value={profileData.name}
-            onChange={handleInputChange}
+            value={editData.displayName}
+            onChange={(e) => setEditData({ ...editData, displayName: e.target.value })}
+            placeholder="Display Name"
           />
-          <InputField
-            type="text"
-            name="surname"
-            placeholder="Surname"
-            value={profileData.surname}
-            onChange={handleInputChange}
-          />
-          <SectionTitle>About Me</SectionTitle>
-          <TextArea
-            name="about"
-            placeholder="Write something about yourself..."
-            value={profileData.about}
-            onChange={handleInputChange}
-          />
-          <SectionTitle>Contact Information</SectionTitle>
-          <InputField
+          <input
             type="email"
-            name="email"
+            value={editData.email}
+            onChange={(e) => setEditData({ ...editData, email: e.target.value })}
             placeholder="Email"
-            value={profileData.email}
-            onChange={handleInputChange}
           />
-          <InputField
+          <input
             type="text"
-            name="phone"
-            placeholder="Phone Number"
-            value={profileData.phone}
-            onChange={handleInputChange}
+            value={editData.photos}
+            onChange={(e) => setEditData({ ...editData, photos: e.target.value })}
+            placeholder="Profile Photo URL"
           />
-          <ButtonGroup>
-            <Button onClick={handleSaveChanges} primary>
-              Save Changes
-            </Button>
-          </ButtonGroup>
-        </ProfileCard>
+          <button onClick={saveUserProfile}>Save Changes</button>
+        </div>
       ) : (
-        <ProfileCard>
-          <ProfileHeader>
-            <ProfileAvatar
-              src={profileData.avatar || "https://via.placeholder.com/100"}
-              alt="Profile Avatar"
-            />
-            <ProfileName>
-              {profileData.name} {profileData.surname}
-            </ProfileName>
-          </ProfileHeader>
-          <ProfileDetails>
-            <SectionTitle>About Me</SectionTitle>
-            <ProfileText>
-              {profileData.about || "No information provided"}
-            </ProfileText>
-            <SectionTitle>Contact Information</SectionTitle>
-            <ProfileText>
-              <strong>Email:</strong> {profileData.email || "No email provided"}
-            </ProfileText>
-            <ProfileText>
-              <strong>Phone:</strong>{" "}
-              {profileData.phone || "No phone number provided"}
-            </ProfileText>
-          </ProfileDetails>
-          <ButtonGroup>
-            <Button onClick={handleEditClick} primary>
-              Edit Profile
-            </Button>
-          </ButtonGroup>
-        </ProfileCard>
+        <p css={styles.email}>Email: {user.email}</p>
       )}
-    </ProfileContainer>
+      <button onClick={toggleEditMode}>
+        {isEditing ? 'Cancel' : 'Edit Profile'}
+      </button>
+    </div>
   );
 };
 
-// Styled Components
-const ProfileContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #f9f9f9;
-`;
-
-const ProfileCard = styled.div`
-  background: white;
-  border-radius: 10px;
-  max-width: 400px;
-  width: 100%;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-`;
-
-const ProfileHeader = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-`;
-
-const ProfileAvatar = styled.img`
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  border: 2px solid #007acc;
-  margin-bottom: 10px;
-`;
-
-const ProfileName = styled.h1`
-  font-size: 1.5rem;
-  color: #333;
-`;
-
-const ProfileDetails = styled.div`
-  text-align: left;
-`;
-
-const SectionTitle = styled.h3`
-  font-size: 1.2rem;
-  color: #007acc;
-  margin-top: 20px;
-`;
-
-const ProfileText = styled.p`
-  font-size: 1rem;
-  color: #555;
-`;
-
-const InputField = styled.input`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const TextArea = styled.textarea`
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-`;
-
-const ButtonGroup = styled.div`
-  margin-top: 20px;
-`;
-
-const Button = styled.button`
-  padding: 10px 15px;
-  font-size: 1rem;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: ${(props) => (props.primary ? "#007acc" : "#ccc")};
-  color: white;
-
-  &:hover {
-    background-color: ${(props) => (props.primary ? "#005fa3" : "#aaa")};
-  }
-`;
+const styles = {
+  container: css`
+    text-align: center;
+    margin: 20px;
+  `,
+  title: css`
+    font-size: 2em;
+    color: #333;
+  `,
+  username: css`
+    font-size: 1.5em;
+    color: #666;
+  `,
+  image: css`
+    border-radius: 50%;
+    width: 150px;
+    height: 150px;
+  `,
+  email: css`
+    font-size: 1.2em;
+    color: #666;
+  `,
+};
 
 export default UserProfile;
